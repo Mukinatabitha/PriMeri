@@ -1,10 +1,10 @@
 #PriMeri
 -IAP - Internet Application Programming Project
 
-Overview
+
 <img width="300" height="300" alt="PriMeri Logo" src="https://github.com/user-attachments/assets/3270f8b7-d099-4a55-a37e-bb8a52aefa99" />
 
-
+Overview
 PriMeri is a web-based application designed for Internet Application Programming coursework. It facilitates a streamlined system where business owners can place wholesale orders directly to manufacturers for the production of custom items and make secure deposit payments. This platform bridges the gap between businesses and manufacturers, enabling efficient order management, payment processing and production tracking.
 
  Features
