@@ -16,9 +16,9 @@
    
     <div class="form-section">
       <h2>Sign Up for PriMeri</h2>
-      <form>
-        <input type="text" placeholder="Full Name" required>
-        <input type="email" placeholder="Email Address" required>
+      <form action="/php/signup.php" method="POST">
+        <input type="text" name="name" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email Address" required>
 
         
         <div class="dropdown">
@@ -29,7 +29,7 @@
           </div>
         </div>
 
-        <input type="password" placeholder="Password" required>
+        <input type="password" name="password" placeholder="Password" required>
         <input type="password" placeholder="Confirm Password" required>
 
         <button type="submit" class="signup-btn">Sign Up</button>
