@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PriMeri Sign Up</title>
+  <link rel="stylesheet" href="../css/signup.css"> 
+</head>
+<body>
+
+  <div class="main-content">
+    
+    <div class="logo-section">
+      <img src="../images/logo.jpg" alt="PriMeri Logo">
+    </div>
+
+    <div class="form-section">
+      <h2>Sign Up for PriMeri</h2>
+      <form action="../php/signup.php" method="POST">
+        <input type="text" name="fullName" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+
+        <!-- dropdown with hidden input -->
+        <div class="dropdown">
+          <button type="button" class="dropdown-btn" onclick="toggleDropdown()">Account Type ▼</button>
+          <div class="dropdown-content" id="dropdown-options">
+            <button type="button" onclick="selectOption('Manufacturer')">Manufacturer</button>
+            <button type="button" onclick="selectOption('Buyer')">Buyer</button>
+          </div>
+        </div>
+        <input type="hidden" name="accountType" id="accountType"> <!-- hidden input -->
+
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" required> <!-- fixed -->
+
+        <button type="submit" class="signup-btn">Sign Up</button>
+      </form>
+      <p>Already have your account? <a href="login.html">Log In</a></p>
+    </div>
+  </div>
+
+  <p class="slogan">Bridging the Gap, Building the Future</p>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown-options");
+      dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+    }
+
+    function selectOption(option) {
+      document.querySelector(".dropdown-btn").innerText = option;
+      document.getElementById("accountType").value = option; // set hidden input
+      document.getElementById("dropdown-options").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      const btn = document.querySelector('.dropdown-btn');
+      const options = document.getElementById("dropdown-options");
+      if (!event.target.matches('.dropdown-btn')) {
+        if (options) options.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
