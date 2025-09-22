@@ -19,7 +19,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    
+    // Check if user exists and verify password
+    $stmt = $conn->prepare("SELECT id, name, email, password, accountType FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+
+        
+
+            // Redirect to dashboard or home page
+            header("Location: ../html/home.html");
+            exit();
+        } else {
+            // Invalid password
+            $_SESSION['error'] = "Invalid email or password.";
+            header("Location: ../html/login.html");
+            exit();
+        }
+    } else {
+        // User not found
+        $_SESSION['error'] = "Invalid email or password.";
+        header("Location: ../html/login.html");
+        exit();
     }
 
     $stmt->close();
