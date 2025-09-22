@@ -3,11 +3,12 @@
 // Check for form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+    // submit the code to the user's email
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        //Generate code
+        // Generate code
         $code = random_int(100000, 999999); 
 
         $to = $email;
@@ -27,8 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </html>
         ';
 
-       // adding headers to an email
-       
+        
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= 'From: PriMeri <noreply@primeri.com>' . "\r\n";
@@ -36,29 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mailSent = mail($to, $subject, $message, $headers);
 
         if ($mailSent) {
-            $result = "A verification code has been sent to your email address.";
-            $success_class = 'success';
+            // Success response (can be a JSON response in a real-world scenario)
+            echo json_encode(['status' => 'success', 'message' => 'A verification code has been sent to your email address.']);
         } else {
-            $result = "Failed to send the email. Please try again later.";
-            $success_class = 'error';
+            // Error response
+            echo json_encode(['status' => 'error', 'message' => 'Failed to send the email. Please try again later.']);
         }
 
     } else {
-        $result = "Invalid email address.";
-        $success_class = 'error';
+        // Invalid email response
+        echo json_encode(['status' => 'error', 'message' => 'Invalid email address.']);
     }
 }
-
-?>
-
-<form method="POST" action="">
-    <input type="email" id="email" name="email" placeholder="Email address" required>
-    <button type="submit">Send Code</button>
-</form>
-
-<?php if (isset($result)): ?>
-    <div id="result">
-        <p class="<?php echo $success_class; ?>"><?php echo $result; ?></p>
-    </div>
-<?php endif; 
-?>
