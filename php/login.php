@@ -28,7 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
 
-        
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+            // Login successful - set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['account_type'] = $user['accountType'];
+            $_SESSION['logged_in'] = true;
 
             // Redirect to dashboard or home page
             header("Location: ../html/home.html");
