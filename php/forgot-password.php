@@ -1,24 +1,50 @@
 <?php
-header('Content-Type: application/json');
-
 include 'conf.php';
 require '../vendor/autoload.php';
-require 'email_functions.php'; // your functions
+require 'sendMail.php'; // has passwordResetEmail()
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    // Call the password reset function
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+
+    if (empty($email)) {
+        die("Error: Please enter your email address.");
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Error: Invalid email format.");
+    }
+
+    // Optional: check if email exists in your database
+    include 'connect.php';
+    $check = $conn->prepare("SELECT name FROM users WHERE email = ?");
+    $check->bind_param("s", $email);
+    $check->execute();
+    $result = $check->get_result();
+
+    if ($result->num_rows === 0) {
+        die("Error: No account found with that email address.");
+    }
+
+    $user = $result->fetch_assoc();
+    $name = $user['name'] ?? 'User';
+    $check->close();
+
+    // Call the password reset email function
     $result = passwordResetEmail($email);
 
-    // Return JSON response
-    echo json_encode($result);
-    exit;
+    if ($result['status'] === 'success') {
+        echo "<script>alert('A password reset code has been sent to your email.'); 
+              window.location.href='../html/reset-code.html';</script>";
+        exit();
+    } else {
+        echo "Error: " . $result['message'];
+    }
 } else {
-    echo json_encode([
-        'status'  => 'error',
-        'message' => 'Invalid request method.'
-    ]);
-    exit;
+    // Direct access (no POST)
+    header("Location: ../html/forgot-password.html");
+    exit();
 }
 ?>
