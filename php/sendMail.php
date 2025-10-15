@@ -66,7 +66,7 @@ function registrationEmail($toEmail, $name) {
     }
 }
 function passwordResetEmail($toEmail) {
-    $mail = new PHPMailer(true);
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
 
     try {
         // Sanitize and validate email
