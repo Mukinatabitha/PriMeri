@@ -1,9 +1,8 @@
 <?php
 
 require '../vendor/autoload.php'; 
-
+$mail = new PHPMailer\PHPMailer\PHPMailer();
 function registrationEmail($toEmail, $name) {
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
 
     try {
         // Server settings
@@ -66,7 +65,7 @@ function registrationEmail($toEmail, $name) {
     }
 }
 function passwordResetEmail($toEmail) {
-    $mail = new PHPMailer(true);
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
 
     try {
         // Validate email

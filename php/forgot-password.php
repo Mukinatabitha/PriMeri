@@ -1,5 +1,6 @@
 <?php
 include 'conf.php';
+include 'connect.php';
 require '../vendor/autoload.php';
 require 'sendMail.php'; // has passwordResetEmail()
 
@@ -17,8 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error: Invalid email format.");
     }
 
-    // Optional: check if email exists in your database
-    include 'connect.php';
     $check = $conn->prepare("SELECT name FROM users WHERE email = ?");
     $check->bind_param("s", $email);
     $check->execute();
