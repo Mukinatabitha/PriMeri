@@ -1,10 +1,10 @@
 <?php
 
 require '../vendor/autoload.php'; 
-$mail = new PHPMailer\PHPMailer\PHPMailer();
 function registrationEmail($toEmail, $name) {
 
     try {
+      $mail = new PHPMailer\PHPMailer\PHPMailer();
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
