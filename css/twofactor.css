@@ -1,0 +1,147 @@
+:root {
+  --color-background: #f3ecdf;
+  --color-primary: #1f3b1f;
+  --color-primary-hover: #2f5a2f;
+  --color-border: #f3ecdf;
+  --color-text: #3b4d2b;
+  --slogan-font-size: 22px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.back-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.back-icon:hover {
+  color: var(--color-primary-hover);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.form-section {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.form-section h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  color: var(--color-primary);
+}
+
+.instruction {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.form-section input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 2px solid var(--color-border);
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 5px;
+}
+
+.form-section input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 5px rgba(31,59,31,0.3);
+}
+
+.verify-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.verify-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.resend {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.resend a {
+  color: var(--color-text);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.resend a:hover {
+  text-decoration: underline;
+}
+
+.error-msg {
+  margin-top: 15px;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.slogan {
+  text-align: center;
+  font-size: var(--slogan-font-size);
+  color: var(--color-primary);
+  margin: 10px 0;
+  font-style: italic;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .form-section {
+    width: 90%;
+    padding: 25px;
+  }
+
+  .back-icon {
+    font-size: 24px;
+    top: 15px;
+    left: 15px;
+  }
+
+  .slogan {
+    font-size: 18px;
+  }
+}

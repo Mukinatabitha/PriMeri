@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriMeri Two-Factor Authentication</title>
+  <link rel="stylesheet" href="../css/twofactor.css">
+  <link rel="icon" type="image/png" href="../images/favicon.ico">
+</head>
+<body>
+
+  <!-- Back icon -->
+  <a href="login.html" class="back-icon" title="Back to Login">&#8592;</a>
+
+  <div class="main-content">
+    <div class="form-section">
+      <h2>Two-Factor Authentication</h2>
+      <p class="instruction">Enter the 4-digit code sent to your email.</p>
+
+      <!-- Form submits to PHP for validation -->
+      <form action="../php/verify_code.php" method="POST">
+        <input 
+          type="text" 
+          name="code" 
+          maxlength="4" 
+          placeholder="Enter 4-digit code" 
+          pattern="\d{4}" 
+          title="Enter a 4-digit code" 
+          required
+        >
+        <button type="submit" class="verify-btn">Verify</button>
+      </form>
+
+      <p class="resend">Didn’t receive the code? <a href="#">Resend</a></p>
+
+      <!-- Display error if any -->
+      <?php if (isset($_GET['error'])): ?>
+        <p class="error-msg"><?php echo htmlspecialchars($_GET['error']); ?></p>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <p class="slogan">Bridging the Gap, Building the Future</p>
+
+</body>
+</html>
