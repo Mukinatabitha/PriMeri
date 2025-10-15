@@ -1,9 +1,8 @@
 <?php
-include 'conf.php';
-require '../vendor/autoload.php'; 
 
+require '../vendor/autoload.php'; 
+$mail = new PHPMailer\PHPMailer\PHPMailer();
 function registrationEmail($toEmail, $name) {
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
 
     try {
         // Server settings
@@ -69,13 +68,13 @@ function passwordResetEmail($toEmail) {
     $mail = new PHPMailer\PHPMailer\PHPMailer();
 
     try {
-        // Sanitize and validate email
+        // Validate email
         $toEmail = filter_var($toEmail, FILTER_SANITIZE_EMAIL);
         if (!filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
             return ['status' => 'error', 'message' => 'Invalid email address.'];
         }
 
-        // Generate verification code
+        // Generate 6-digit code
         $code = random_int(100000, 999999);
 
         // Server settings
@@ -86,6 +85,9 @@ function passwordResetEmail($toEmail) {
         $mail->Password   = SMTP_PASSWORD;
         $mail->SMTPSecure = SMTP_ENCRYPTION;
         $mail->Port       = SMTP_PORT;
+        // Debug (optional)
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'html';
 
         // Recipients
         $mail->setFrom(SMTP_USERNAME, 'PriMeri Support');
@@ -94,17 +96,14 @@ function passwordResetEmail($toEmail) {
         // Content
         $mail->isHTML(true);
         $mail->Subject = "Password Reset Code";
-        $mail->Body    = "
+        $mail->Body = "
         <html>
-        <head>
-          <title>Password Reset</title>
-        </head>
         <body>
           <h2>Hello,</h2>
           <p>You requested a password reset. Your verification code is:</p>
-          <h3>{$code}</h3>
-          <p>This code is valid for a short period of time. Do not share it with anyone.</p>
-          <p>If you did not request this, ignore this email.</p>
+          <h3 style='color: #2f5a2f;'>{$code}</h3>
+          <p>This code is valid for a short period. Do not share it with anyone.</p>
+          <p>If you didn’t request this, ignore this email.</p>
         </body>
         </html>
         ";
