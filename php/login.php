@@ -28,32 +28,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
 
-        // Verify password
         if (password_verify($password, $user['password'])) {
-            // Login successful - set session variables
+            // Login successful - store user info temporarily
+            $_SESSION['pending_2fa'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['account_type'] = $user['accountType'];
-            $_SESSION['logged_in'] = true;
 
-            // Redirect based on account type
-            if ($user['accountType'] === 'manufacturer') {
-                header("Location: ../html/manufacturer.html");
-                exit();
-            } elseif ($user['accountType'] === 'buyer') {
-                header("Location: ../html/catalog.html");
-                exit();
-            }
-
+            // Redirect to two-factor verification page first
+            header("Location: ../html/twofactor.html");
+            exit();
         } else {
-            // Invalid password
             $_SESSION['error'] = "Invalid email or password.";
             header("Location: ../html/login.html");
             exit();
         }
     } else {
-        // User not found
         $_SESSION['error'] = "Invalid email or password.";
         header("Location: ../html/login.html");
         exit();
@@ -64,3 +55,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+
