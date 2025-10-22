@@ -1,16 +1,39 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "admin123";
-$dbname = "primeri";
+class Database {
+    private $host = "localhost";
+    private $user = "root";
+    private $password = "";
+    private $dbname = "primeri";
+    private $port = 3308;
+    private $conn;
 
+    public function __construct() {
+        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->dbname, $this->port);
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
 
-$conn = new mysqli($host, $user, $password, $dbname,3306);
+    public function getConnection() {
+        return $this->conn;
+    }
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    public function closeConnection() {
+        if ($this->conn) {
+            $this->conn->close();
+        }
+    }
+
+    public function query($sql) {
+        return $this->conn->query($sql);
+    }
+
+    public function prepare($sql) {
+        return $this->conn->prepare($sql);
+    }
 }
-else {
-    
-}
+
+// Instantiate the database connection
+$db = new Database();
+$conn = $db->getConnection();
 ?>
