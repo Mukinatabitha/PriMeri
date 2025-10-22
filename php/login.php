@@ -37,9 +37,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['account_type'] = $user['accountType'];
             $_SESSION['logged_in'] = true;
 
-            // Redirect to dashboard or home page
-            header("Location: ../html/home.html");
-            exit();
+            // Redirect based on account type
+            if ($user['accountType'] === 'manufacturer') {
+                header("Location: ../html/manufacturer.html");
+                exit();
+            } elseif ($user['accountType'] === 'buyer') {
+                header("Location: ../html/catalog.html");
+                exit();
+            }
+
         } else {
             // Invalid password
             $_SESSION['error'] = "Invalid email or password.";

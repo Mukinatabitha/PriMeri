@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriMeri - Product Catalog</title>
+    <!-- Load Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="../css/catalog.css">
+</head>
+<body class="bg-light-bg text-dark">
+    <!-- Header / Navigation Bar (Navbar) - Included for context and visual framing -->
+    <header class="bg-white shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-xl px-4">
+                <!-- Logo area -->
+                <a href="#" class="navbar-brand fs-4 fw-bold text-primary-custom d-flex align-items-center">
+    <!-- Image logo instead of SVG -->
+    <img src="../images/logo.jpg" alt="PriMeri Logo" width="48" height="48" class="me-2">
+    PriMeri
+</a>
+
+
+                <!-- Navbar Toggler for mobile support -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Catalog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <a href="login.html">
+                            <button class="btn btn-link text-dark me-2 transition">Log In</button>
+                        </a>
+                        <a href="signup.html">
+                            <button class="btn bg-primary-custom text-white px-4 py-2 rounded-3 shadow btn-hover-primary">Get Started</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-xl px-4">
+        <!-- Product Catalog View (The core content) -->
+        <main id="catalog-view" class="pt-5 pb-5">
+            <!-- Catalog Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bolder text-dark">Diverse Product Catalog</h1>
+                <p class="fs-5 text-muted mx-auto" style="max-width: 700px;">Browse high-quality, customizable items available from our vetted manufacturing partners, spanning all key sectors.</p>
+            </div>
+
+            <!-- Product Showcase Grid (8 Cards for Variety) -->
+            <div id="product-grid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                <!-- Category 1: Apparel -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/Branded Apparel.png" class="card-img-top" alt="Custom Branded Apparel">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Branded Apparel & Uniforms</h3>
+                            <p class="card-text text-muted small mb-3">High-quality custom t-shirts, jackets, and corporate uniforms with durable logo application (embroidery/print).</p>
+                            <button class="btn bg-secondary-custom text-white w-100 btn-sm fw-medium">
+                                Inquire for Textiles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2: Food -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/GourmetFoodProducts.png" class="card-img-top" alt="Gourmet Food Products">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Gourmet Food Products</h3>
+                            <p class="card-text text-muted small mb-3">Custom branded snacks, candies, and packaged dry goods, ideal for retail or promotional giveaways.</p>
+                            <button class="btn bg-primary-custom text-white w-100 btn-sm fw-medium btn-hover-primary">
+                                View Certifications
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3: Drinks -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/ArtisanalBeverages.png" class="card-img-top" alt="Artisanal Beverages">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Artisanal Beverages</h3>
+                            <p class="card-text text-muted small mb-3">Private-label water, juices, and specialized coffees/teas with custom bottling and labeling design.</p>
+                            <button class="btn bg-secondary-custom text-white w-100 btn-sm fw-medium">
+                                Request Sample
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 4: Packaging -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/BrandedRetailPackaging.png" class="card-img-top" alt="Branded Retail Packaging">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Branded Retail Packaging</h3>
+                            <p class="card-text text-muted small mb-3">Custom-sized boxes, bags, and labels designed for high visual impact and product protection.</p>
+                            <button class="btn bg-primary-custom text-white w-100 btn-sm fw-medium btn-hover-primary">
+                                Get Pricing
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 5: Gifts -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/GiftBoxes.png" class="card-img-top" alt="Curated Corporate Gift Boxes">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Curated Corporate Gift Boxes</h3>
+                            <p class="card-text text-muted small mb-3">Sustainably sourced and beautifully packaged gift sets for client retention and staff appreciation.</p>
+                            <button class="btn bg-secondary-custom text-white w-100 btn-sm fw-medium">
+                                Start a Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 6: Engraved/Wood -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/EngravedGoods.png" class="card-img-top" alt="Laser Engraved Goods">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Laser Engraved Goods</h3>
+                            <p class="card-text text-muted small mb-3">Precision-cut keychains, display plaques, and promotional items crafted with durable materials (wood/metal).</p>
+                            <button class="btn bg-primary-custom text-white w-100 btn-sm fw-medium btn-hover-primary">
+                                Request Quote
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 7: Health & Beauty -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/Health&Beauty.png" class="card-img-top" alt="Private Label Health & Beauty">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Private Label Health & Beauty</h3>
+                            <p class="card-text text-muted small mb-3">Custom-formulated soaps, lotions, and sanitizers with branded packaging, meeting health standards.</p>
+                            <button class="btn bg-secondary-custom text-white w-100 btn-sm fw-medium">
+                                Formulation Help
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 8: Tech -->
+                <div class="col">
+                    <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden hover-scale-up">
+                        <div class="image-container">
+                            <!-- Replace this src with your image path -->
+                            <img src="../images/BrandedTech.png" class="card-img-top" alt="Branded Tech Accessories">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="card-title fs-6 fw-semibold mb-1">Branded Tech Accessories</h3>
+                            <p class="card-text text-muted small mb-3">Power banks, phone grips, and charging cables with precise logo placement and quality assurance.</p>
+                            <button class="btn bg-primary-custom text-white w-100 btn-sm fw-medium btn-hover-primary">
+                                Browse Electronics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Product Showcase Grid -->
+        </main>
+        <!-- End Product Catalog View -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg-custom text-white mt-5">
+        <div class="container-xl px-4 py-4 text-center">
+            <p class="mb-0">&copy; 2025 PriMeri.</p>
+        </div>
+    </footer>
+
+    <!-- Load Bootstrap 5.3 JS Bundle (needed for Navbar Toggler, which handles mobile menu) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
