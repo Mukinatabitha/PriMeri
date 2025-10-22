@@ -1,27 +1,42 @@
 <?php
 
-require '../vendor/autoload.php'; 
-function registrationEmail($toEmail, $name) {
+require '../vendor/autoload.php';
 
-    try {
-      $mail = new PHPMailer\PHPMailer\PHPMailer();
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_ENCRYPTION;
-        $mail->Port = SMTP_PORT;
+class Mail {
+    private $smtpHost;
+    private $smtpPort;
+    private $smtpUsername;
+    private $smtpPassword;
+    private $smtpEncryption;
 
-        // Recipients
-        $mail->setFrom(SMTP_USERNAME, 'PriMeri Support');
-        $mail->addAddress($toEmail, $name);
+    public function __construct($smtpHost, $smtpPort, $smtpUsername, $smtpPassword, $smtpEncryption) {
+        $this->smtpHost = $smtpHost;
+        $this->smtpPort = $smtpPort;
+        $this->smtpUsername = $smtpUsername;
+        $this->smtpPassword = $smtpPassword;
+        $this->smtpEncryption = $smtpEncryption;
+    }
 
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Welcome to PriMeri!';
-        $mail->Body = "
+    public function registrationEmail($toEmail, $name) {
+        try {
+            $mail = new PHPMailer\PHPMailer\PHPMailer();
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $this->smtpHost;
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->smtpUsername;
+            $mail->Password = $this->smtpPassword;
+            $mail->SMTPSecure = $this->smtpEncryption;
+            $mail->Port = $this->smtpPort;
+
+            // Recipients
+            $mail->setFrom($this->smtpUsername, 'PriMeri Support');
+            $mail->addAddress($toEmail, $name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Welcome to PriMeri!';
+            $mail->Body = "
 <div style='font-family: Arial, sans-serif; background-color: #f3ecdf; padding: 20px;'>
   <div style='max-width: 600px; margin: auto; background: #ffffff; border-radius: 12px; 
               padding: 30px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);'>
@@ -59,44 +74,45 @@ function registrationEmail($toEmail, $name) {
   </div>
 </div>
 ";
-        $mail->send();
- 
-    } catch (Exception $e) {
-    }
-}
-function passwordResetEmail($toEmail) {
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
+            $mail->send();
 
-    try {
-        // Validate email
-        $toEmail = filter_var($toEmail, FILTER_SANITIZE_EMAIL);
-        if (!filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
-            return ['status' => 'error', 'message' => 'Invalid email address.'];
+        } catch (Exception $e) {
         }
+    }
 
-        // Generate 6-digit code
-        $code = random_int(100000, 999999);
+    public function passwordResetEmail($toEmail) {
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
 
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host       = SMTP_HOST;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = SMTP_USERNAME;
-        $mail->Password   = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_ENCRYPTION;
-        $mail->Port       = SMTP_PORT;
-        // Debug (optional)
-        // $mail->SMTPDebug = 2;
-        // $mail->Debugoutput = 'html';
+        try {
+            // Validate email
+            $toEmail = filter_var($toEmail, FILTER_SANITIZE_EMAIL);
+            if (!filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+                return ['status' => 'error', 'message' => 'Invalid email address.'];
+            }
 
-        // Recipients
-        $mail->setFrom(SMTP_USERNAME, 'PriMeri Support');
-        $mail->addAddress($toEmail);
+            // Generate 6-digit code
+            $code = random_int(100000, 999999);
 
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = "Password Reset Code";
-        $mail->Body = "
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $this->smtpHost;
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->smtpUsername;
+            $mail->Password = $this->smtpPassword;
+            $mail->SMTPSecure = $this->smtpEncryption;
+            $mail->Port = $this->smtpPort;
+            // Debug (optional)
+            // $mail->SMTPDebug = 2;
+            // $mail->Debugoutput = 'html';
+
+            // Recipients
+            $mail->setFrom($this->smtpUsername, 'PriMeri Support');
+            $mail->addAddress($toEmail);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = "Password Reset Code";
+            $mail->Body = "
         <html>
         <body>
           <h2>Hello,</h2>
@@ -108,19 +124,20 @@ function passwordResetEmail($toEmail) {
         </html>
         ";
 
-        $mail->send();
+            $mail->send();
 
-        return [
-            'status'  => 'success',
-            'message' => 'A verification code has been sent to your email address.',
-            'code'    => $code
-        ];
+            return [
+                'status' => 'success',
+                'message' => 'A verification code has been sent to your email address.',
+                'code' => $code
+            ];
 
-    } catch (Exception $e) {
-        return [
-            'status'  => 'error',
-            'message' => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}"
-        ];
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}"
+            ];
+        }
     }
 }
 ?>

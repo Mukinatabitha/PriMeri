@@ -1,5 +1,8 @@
 <?php
 include 'connect.php';
+require 'sendMail.php';
+require 'user.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullName = $_POST['fullName'];
     $email = $_POST['email'];
@@ -14,29 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die("Error: Invalid email format.");
     }
-    else if($emailExists = $conn->prepare("SELECT id FROM users WHERE email = ?"))
-    {
-        $emailExists->bind_param("s", $email);
-        $emailExists->execute();
-        $emailExists->store_result();
-        if($emailExists->num_rows > 0) {
-            die("Error: Email already registered.");
-        }
-        $emailExists->close();
+
+    $userObj = new User($db);
+    if ($userObj->checkEmailExists($email)) {
+        die("Error: Email already registered.");
     }
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (name, email, accountType, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $fullName, $email, $accountType, $hashedPassword);
-
-    if ($stmt->execute()) {
-        include 'sendMail.php';
-        registrationEmail($email, $fullName);
+    if ($userObj->signup($fullName, $email, $accountType, $password)) {
+        $mail = new Mail(SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_ENCRYPTION);
+        $mail->registrationEmail($email, $fullName);
         header("Location: ../html/login.html");
         exit();
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error: Registration failed.";
     }
-    $stmt->close();
 }
 ?>
