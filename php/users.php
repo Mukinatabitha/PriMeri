@@ -16,8 +16,8 @@
         <?php
         include 'connect.php';
         $sql = "SELECT name, email, accountType FROM users ORDER BY name ASC";
-        $result = $conn->query($sql);
-        
+        $result = $db->query($sql);
+
         if ($result->num_rows > 0) {
             echo '<div class="user-count">Total users: <strong>' . $result->num_rows . '</strong></div>';
             echo '<input type="text" class="search-box" placeholder="Search users..." id="searchInput">';
@@ -29,7 +29,7 @@
             echo '<th>Account Type</th>';
             echo '</tr></thead>';
             echo '<tbody>';
-            
+
             $i = 1;
             while($row = $result->fetch_assoc()) {
                 echo '<tr>';
@@ -40,7 +40,7 @@
                 echo '</tr>';
                 $i++;
             }
-            
+
             echo '</tbody>';
             echo '</table>';
         } else {
@@ -49,8 +49,8 @@
             echo '<p>There are currently no registered users in the system.</p>';
             echo '</div>';
         }
-        
-        $conn->close();
+
+        $db->closeConnection();
         ?>
     </div>
 
