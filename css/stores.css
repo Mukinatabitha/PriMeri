@@ -1,0 +1,26 @@
+.store-card {
+    transition: transform 0.3s ease;
+}
+
+.store-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-tag {
+    display: inline-block;
+    background-color: var(--primary-custom);
+    color: black;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin: 2px;
+}
+
+.store-rating {
+    color: #ffc107;
+}
+
+.filter-active {
+    background-color: var(--primary-custom) !important;
+    color: black !important;
+}
