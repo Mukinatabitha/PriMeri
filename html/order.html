@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriMeri - Order Products</title>
+    
+    <!-- Load Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Link to external CSS files -->
+    <link rel="stylesheet" href="../css/catalog.css">
+    <link rel="stylesheet" href="../css/order.css">
+</head>
+<body class="bg-light-bg text-dark">
+    <!-- Header / Navigation Bar -->
+    <header class="bg-white shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-xl px-4">
+                <!-- Logo area -->
+                <a href="#" class="navbar-brand fs-4 fw-bold text-primary-custom d-flex align-items-center">
+                    <img src="../images/logo.jpg" alt="PriMeri Logo" width="48" height="48" class="me-2">
+                    PriMeri
+                </a>
+
+                <!-- Navbar Toggler for mobile support -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="home.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="catalog.html">Catalog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="stores.html">Stores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="../php/contact.php">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <a href="login.html">
+                            <button class="btn btn-link text-dark me-2 transition">Log In</button>
+                        </a>
+                        <a href="signup.html">
+                            <button class="btn bg-primary-custom text-white px-4 py-2 rounded-3 shadow btn-hover-primary">Get Started</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-xl px-4 py-5">
+        <!-- Order View -->
+        <main id="order-view">
+            <!-- Store Header -->
+            <div class="store-header text-center mb-5">
+                <div class="store-banner bg-primary-custom text-white rounded-4 p-5 mb-4">
+                    <h1 class="display-5 fw-bolder mb-3">Urban Threads Co.</h1>
+                    <p class="fs-5 mb-0 mx-auto" style="max-width: 700px;">
+                        Premium custom apparel manufacturer specializing in corporate uniforms and branded clothing.
+                    </p>
+                </div>
+                
+                <!-- Store Info -->
+                <div class="store-info row g-4">
+                    <div class="col-md-4">
+                        <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                            <h6 class="fw-semibold text-primary-custom mb-2">Minimum Order</h6>
+                            <p class="mb-0">50 units per product</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                            <h6 class="fw-semibold text-primary-custom mb-2">Lead Time</h6>
+                            <p class="mb-0">7-14 business days</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                            <h6 class="fw-semibold text-primary-custom mb-2">Customization</h6>
+                            <p class="mb-0">Logo printing & embroidery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Products Section -->
+                <div class="col-lg-8 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bolder text-dark">Available Products</h2>
+                        <div class="cart-indicator bg-primary-custom text-white rounded-pill px-3 py-1">
+                            <span id="cart-count">0</span> items in cart
+                        </div>
+                    </div>
+
+                    <!-- Product Filters -->
+                    <div class="product-filters mb-4">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="product-search" placeholder="Search products...">
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-select" id="category-filter">
+                                    <option value="all">All Categories</option>
+                                    <option value="tshirts">T-Shirts</option>
+                                    <option value="hoodies">Hoodies</option>
+                                    <option value="uniforms">Corporate Uniforms</option>
+                                    <option value="accessories">Accessories</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid row g-4" id="products-container">
+                        <!-- Product cards will be loaded here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Cart Section -->
+                <div class="col-lg-4">
+                    <div class="cart-sidebar card shadow-custom border-0 rounded-4 p-4 sticky-cart">
+                        <h3 class="fw-semibold mb-4">Your Order</h3>
+                        
+                        <!-- Cart Items -->
+                        <div class="cart-items mb-4" id="cart-items">
+                            <div class="empty-cart text-center text-muted py-4">
+                                <i class="bi bi-cart-x fs-1 mb-3"></i>
+                                <p class="mb-0">Your cart is empty</p>
+                                <small>Add products from the store to get started</small>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="order-summary" id="order-summary" style="display: none;">
+                            <div class="order-summary-items mb-3" id="order-summary-items">
+                                <!-- Items will be populated here -->
+                            </div>
+                            
+                            <div class="order-summary-totals">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Subtotal</span>
+                                    <span id="subtotal">KSh 0</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Shipping</span>
+                                    <span id="shipping">KSh 500</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Tax (5%)</span>
+                                    <span id="tax">KSh 0</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                                    <span>Total</span>
+                                    <span id="total">KSh 0</span>
+                                </div>
+                            </div>
+
+                            <!-- Checkout Button -->
+                            <a href="checkout.html" class="btn bg-primary-custom text-white w-100 btn-hover-primary" id="checkout-btn">
+                                Proceed to Checkout
+                            </a>
+                            
+                            <div class="text-center mt-3">
+                                <small class="text-muted">Minimum order: 50 units per product</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End Order View -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg-custom text-white mt-5">
+        <div class="container-xl px-4 py-4 text-center">
+            <p class="mb-0">&copy; 2025 PriMeri.</p>
+        </div>
+    </footer>
+
+    <!-- Load Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- Link to external JavaScript file -->
+    <script src="../js/order.js"></script>
+</body>
+</html>
