@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     // Direct access (no POST)
-    header("Location: ../html/forgot-password.html");
+    header("Location: ../html/reset-password.html");
     exit();
 }
 ?>
