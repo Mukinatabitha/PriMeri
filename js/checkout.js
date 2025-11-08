@@ -53,9 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
     });
     
-    // Phone number formatting for M-Pesa
+    // Phone number input - allow free typing
     const mpesaPhoneInput = document.getElementById('mpesa-phone');
     mpesaPhoneInput.addEventListener('input', function(e) {
+        // Remove any spaces but keep all digits including leading 0
+        let value = e.target.value.replace(/\s+/g, '');
+        e.target.value = value;
+    });
+    
+    // Format phone number when user leaves field
+    mpesaPhoneInput.addEventListener('blur', function(e) {
         formatPhoneNumber(e.target);
     });
 });
@@ -99,18 +106,18 @@ function processMpesaPayment() {
         return;
     }
     
-    if (!mpesaPhone.value) {
+    if (!mpesaPhone.value.trim()) {
         mpesaPhone.focus();
         showValidationError(mpesaPhone, 'Please enter your M-Pesa phone number');
         return;
     }
     
     // Validate phone number format
-    const phoneRegex = /^(?:\+254|0)[17]\d{8}$/;
+    const phoneRegex = /^(?:\+254|0)?(7[0-9]|1[0-1])[0-9]{7}$/;
     const cleanedPhone = mpesaPhone.value.replace(/\s+/g, '');
     
     if (!phoneRegex.test(cleanedPhone)) {
-        showValidationError(mpesaPhone, 'Please enter a valid Kenyan phone number');
+        showValidationError(mpesaPhone, 'Please enter a valid Kenyan phone number (e.g., 0712345678)');
         return;
     }
     
@@ -146,19 +153,21 @@ function processMpesaPayment() {
     }, 3000);
 }
 
-// Format phone number input
+// Format phone number input (preserves leading 0)
 function formatPhoneNumber(input) {
-    let value = input.value.replace(/\D/g, '');
+    let value = input.value.replace(/\s+/g, '');
     
-    if (value.startsWith('0')) {
-        value = value.substring(1);
+    if (value.startsWith('0') && value.length === 10) {
+        // Format as: 071 234 5678
+        input.value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
+    } else if (value.startsWith('254') && value.length === 12) {
+        // Format as: 254 712 345 678
+        input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
+    } else if (value.startsWith('7') && value.length === 9) {
+        // Format as: 071 234 567 (add leading 0 for display)
+        input.value = '0' + value.replace(/(\d{2})(\d{3})(\d{4})/, '$1 $2 $3');
     }
-    
-    if (value.length > 0) {
-        value = value.match(/.{1,3}/g).join(' ');
-    }
-    
-    input.value = value;
+    // Otherwise leave as-is for user to correct
 }
 
 // Show validation error
