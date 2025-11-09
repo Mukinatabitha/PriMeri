@@ -2,7 +2,7 @@
 require_once __DIR__ . '/connect.php';
 
 $dbName = null;
-$conn = $db->getConnection();
+$conn = $db->get();
 if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
     // Get current database name
     $dbResult = $conn->query("SELECT DATABASE() AS dbname");

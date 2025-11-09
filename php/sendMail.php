@@ -139,5 +139,46 @@ class Mail {
             ];
         }
     }
+    public function paymentConfirmationEmail($toEmail, $name, $orderId, $amount)
+    {
+        try {
+            $mail = new PHPMailer\PHPMailer\PHPMailer();
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $this->smtpHost;
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->smtpUsername;
+            $mail->Password = $this->smtpPassword;
+            $mail->SMTPSecure = $this->smtpEncryption;
+            $mail->Port = $this->smtpPort;
+
+            // Recipients
+            $mail->setFrom($this->smtpUsername, 'PriMeri Support');
+            $mail->addAddress($toEmail, $name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Payment Confirmation for Your Order';
+            $mail->Body = "
+                <html>
+                <body>
+                    <h2>Payment Confirmation</h2>
+                    <p>Dear {$name},</p>
+                    <p>Thank you for your order!</p>
+                    <p>Your order ID is: <strong>{$orderId}</strong></p>
+                    <p>Amount Paid: <strong>Ksh {$amount}</strong></p>
+                    <p>If you have any questions, feel free to contact us.</p>
+                </body>
+                </html>
+            ";
+
+            $mail->send();
+
+        } catch (Exception $e) {
+            // Handle error
+        }
+    }
+
 }
+
 ?>

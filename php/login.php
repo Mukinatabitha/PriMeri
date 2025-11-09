@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['account_type'] = $user['accountType'];
 
         // Redirect to two-factor verification page first
-        header("Location: ../html/twofactor.html");
+        header("Location: ../html/home.html");
         exit();
     } else {
         $_SESSION['error'] = "Invalid email or password.";

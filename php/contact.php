@@ -36,7 +36,10 @@
               <a class="nav-link text-dark" href="../html/home.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-dark" href="../html/catalog.html">Catalog</a>
+              <a class="nav-link text-dark" href="../html/catalog.php">Catalog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="../html/stores.php">Stores</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active text-primary-custom fw-semibold" href="./contact.php">Contact</a>
@@ -116,14 +119,6 @@
           <h4 class="fw-bold text-dark mb-3">Get in Touch</h4>
           <p class="text-muted mb-3">We’re based in Nairobi and operate globally through trusted partners.</p>
 
-          <ul class="list-unstyled text-muted">
-            <li class="mb-3">
-              <strong>Email:</strong>
-              <a href="mailto:tabitha.sila@strathmore.edu" class="text-primary-custom text-decoration-none">
-                tabitha.sila@strathmore.edu
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </div>

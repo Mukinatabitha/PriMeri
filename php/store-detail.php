@@ -5,7 +5,7 @@ session_start();
 // Database connection
 $servername = "localhost";
 $username = "root";
-$password = "admin123";
+$password = "";
 $dbname = "primeri";
 
 try {

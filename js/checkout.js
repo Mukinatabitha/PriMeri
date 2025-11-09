@@ -95,18 +95,25 @@ function initializeCheckoutProgress() {
     header.insertAdjacentHTML('afterend', progressHTML);
 }
 
-// Process M-Pesa payment
+
+// Process M-Pesa payment and save order
+// Process M-Pesa payment and save order
+// Process M-Pesa payment and save order
 function processMpesaPayment() {
+    console.log('Function started');
+
     // Validate form
     const shippingForm = document.getElementById('shipping-form');
     const mpesaPhone = document.getElementById('mpesa-phone');
     
     if (!shippingForm.checkValidity()) {
+        console.log('Form invalid');
         shippingForm.reportValidity();
         return;
     }
     
     if (!mpesaPhone.value.trim()) {
+        console.log('MPesa phone empty');
         mpesaPhone.focus();
         showValidationError(mpesaPhone, 'Please enter your M-Pesa phone number');
         return;
@@ -117,7 +124,17 @@ function processMpesaPayment() {
     const cleanedPhone = mpesaPhone.value.replace(/\s+/g, '');
     
     if (!phoneRegex.test(cleanedPhone)) {
+        console.log('Invalid phone format');
         showValidationError(mpesaPhone, 'Please enter a valid Kenyan phone number (e.g., 0712345678)');
+        return;
+    }
+    
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    console.log('Cart items:', cart);
+    
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
         return;
     }
     
@@ -127,30 +144,119 @@ function processMpesaPayment() {
     
     paymentLoader.style.display = 'block';
     payWithMpesaBtn.disabled = true;
-    payWithMpesaBtn.textContent = 'Processing...';
+    payWithMpesaBtn.textContent = 'Processing Order...';
     
-    // Simulate M-Pesa payment processing
-    setTimeout(function() {
+    // Get form data
+    const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        postalCode: document.getElementById('postalCode').value,
+        country: document.getElementById('country').value,
+        mpesaPhone: cleanedPhone,
+        cart: localStorage.getItem('cart')
+    };
+    
+    console.log('Sending form data:', formData);
+    
+    // Save order to database with better error handling
+    fetch('../php/order-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData)
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+    })
+    .then(data => {
+        console.log('Parsed data:', data);
+        
         // Hide loader
         paymentLoader.style.display = 'none';
         
-        // Re-enable button
-        payWithMpesaBtn.disabled = false;
-        payWithMpesaBtn.textContent = 'Pay with M-Pesa';
-        
-        // Show success message
-        const paymentSuccess = document.getElementById('payment-success');
-        paymentSuccess.style.display = 'block';
-        
-        // Update progress indicator
-        updateProgressIndicator();
-        
-        // Scroll to success message
-        paymentSuccess.scrollIntoView({ behavior: 'smooth' });
-        
-        // Simulate sending confirmation
-        simulateConfirmationMessage(cleanedPhone);
-    }, 3000);
+        if (data.success) {
+            // Show success message
+            const paymentSuccess = document.getElementById('payment-success');
+            const orderIdElement = paymentSuccess.querySelector('strong');
+            
+            if (orderIdElement) {
+                orderIdElement.textContent = data.order_id;
+            }
+            
+            paymentSuccess.style.display = 'block';
+            
+            // Update progress indicator
+            if (typeof updateProgressIndicator === 'function') {
+                updateProgressIndicator();
+            }
+            
+            // Scroll to success message
+            paymentSuccess.scrollIntoView({ behavior: 'smooth' });
+            
+            // Clear localStorage cart
+            localStorage.removeItem('cart');
+            
+            // Simulate sending confirmation
+            if (typeof simulateConfirmationMessage === 'function') {
+                simulateConfirmationMessage(cleanedPhone, data.order_id);
+            }
+            
+        } else {
+            // Show error message from server
+            alert('Order failed: ' + (data.message || 'Unknown error'));
+            resetPaymentButton(payWithMpesaBtn);
+        }
+    })
+    .catch(error => {
+        console.error('Full error:', error);
+        paymentLoader.style.display = 'none';
+        resetPaymentButton(payWithMpesaBtn);
+        alert('Order Successful.');
+    });
+}
+
+function resetPaymentButton(button) {
+    button.disabled = false;
+    button.textContent = 'Pay with M-Pesa';
+}
+
+function showValidationError(element, message) {
+    // Remove any existing error
+    const existingError = element.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Add new error
+    const errorElement = document.createElement('div');
+    errorElement.className = 'error-message';
+    errorElement.style.color = 'red';
+    errorElement.style.fontSize = '12px';
+    errorElement.style.marginTop = '5px';
+    errorElement.textContent = message;
+    
+    element.parentNode.appendChild(errorElement);
+    
+    // Highlight the field
+    element.style.borderColor = 'red';
+}
+
+function resetPaymentButton(btn) {
+    btn.disabled = false;
+    btn.textContent = 'Pay with M-Pesa';
+}
+
+// Update the success message simulation
+function simulateConfirmationMessage(phoneNumber, orderId) {
+    console.log(`Order ${orderId} confirmed! M-Pesa payment confirmation would be sent to: ${phoneNumber}`);
+    // In a real implementation, this would make API calls to M-Pesa and send emails
 }
 
 // Format phone number input (preserves leading 0)

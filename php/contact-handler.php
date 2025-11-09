@@ -1,14 +1,19 @@
 <?php
-include 'connect.php'; // connect to database
+// contact-handler.php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Sanitize form inputs
+require '../vendor/autoload.php'; // Path to PHPMailer autoload
+include 'conf.php'; // contains SMTP_* constants
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get and sanitize form data
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $subject = trim($_POST['subject']);
     $message = trim($_POST['message']);
 
-    // Check for empty fields
+    // Validate required fields
     if (empty($name) || empty($email) || empty($subject) || empty($message)) {
         header("Location: ../html/contact.php?status=empty");
         exit();
@@ -16,30 +21,60 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        header("Location: ../html/contact.php?status=invalid_email");
+        header("Location: ../html/contact.php?status=error");
         exit();
     }
 
-    // Insert message into database
-    $stmt = $conn->prepare("INSERT INTO messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssss", $name, $email, $subject, $message);
+    try {
+        $mail = new PHPMailer(true);
 
-    if ($stmt->execute()) {
-        // On success, redirect back to the PHP contact page with success status
-        header("Location: ../php/contact.php?status=success");
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        $mail->SMTPSecure = SMTP_ENCRYPTION;
+         $mail->Port = SMTP_PORT;
+
+        // Recipients
+        $mail->setFrom($email, 'PriMeri Contact Form');
+        $mail->addAddress('maxwell.muthumbi@strathmore.edu', 'PriMeri Team'); // Where to receive emails
+        $mail->addReplyTo($email, $name);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = "PriMeri Contact: " . $subject;
+        
+        $mail->Body = "
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> $name</p>
+            <p><strong>Email:</strong> $email</p>
+            <p><strong>Subject:</strong> $subject</p>
+            <p><strong>Message:</strong></p>
+            <p>" . nl2br(htmlspecialchars($message)) . "</p>
+            <p><em>Submitted: " . date('Y-m-d H:i:s') . "</em></p>
+        ";
+
+        $mail->AltBody = "Name: $name\nEmail: $email\nSubject: $subject\nMessage: $message\nSubmitted: " . date('Y-m-d H:i:s');
+
+        // Send email
+        $mail->send();
+
+        // Success
+        header("Location: ../html/contact.php");
         exit();
-    } else {
-        // On error
-        header("Location: ../php/contact.php?status=error");
+
+    } catch (Exception $e) {
+        // Log error (check your server error logs)
+        error_log("Contact form error: " . $e->getMessage());
+        
+        // Redirect to error page
+        header("Location: ../html/contact.php?status=error");
         exit();
     }
-
-    $stmt->close();
-    $conn->close();
 } else {
-    // If accessed directly, go back to contact page
-    header("Location: ../php/contact.php");
+    // If not POST request, redirect
+    header("Location: ../html/contact.php");
     exit();
 }
-?>
-
