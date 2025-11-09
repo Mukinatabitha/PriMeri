@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriMeri - Store Details</title>
+    
+    <!-- Load Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <style>
+        /* Define Custom Colors */
+        :root {
+            --primary: #3A4D39; /* Dark Olive Green */
+            --secondary: #8E7C68; /* Muted Brown/Taupe */
+            --light-bg: #FAF8F3; /* Soft Cream Background */
+            --dark-bg: #3A4D39;
+            --success: #4A7C59; /* Muted Green for success */
+            --bs-body-bg: var(--light-bg);
+            --bs-body-color: #343a40; /* Darker text */
+        }
+
+        /* Custom Utility Classes to map to the brand colors */
+        .bg-primary-custom {
+            background-color: var(--primary) !important;
+        }
+        .text-primary-custom {
+            color: var(--primary) !important;
+        }
+        .bg-secondary-custom {
+            background-color: var(--secondary) !important;
+        }
+        .text-secondary-custom {
+            color: var(--secondary) !important;
+        }
+        .bg-dark-bg-custom {
+            background-color: var(--dark-bg) !important;
+        }
+
+        /* Setting a professional, clean font - Using a common system fallback */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--bs-body-color);
+        }
+
+        /* Custom Hover Effects (Tailwind-like) */
+        .btn-hover-primary:hover {
+            background-color: #2b392b !important;
+            border-color: #2b392b !important;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover-secondary:hover {
+            background-color: #7a6b5a !important;
+            border-color: #7a6b5a !important;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .hover-scale-up:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Image Container Styling */
+        .image-container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Store Detail Page Specific Styles */
+        .store-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, #2b392b 100%);
+        }
+
+        .store-detail-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(58, 77, 57, 0.1);
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .store-detail-card:hover {
+            box-shadow: 0 6px 18px rgba(58, 77, 57, 0.15);
+        }
+
+        .product-card {
+            border: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .product-image {
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .cart-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .cart-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-remove {
+            color: #dc3545;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .cart-item-remove:hover {
+            color: #bd2130;
+        }
+
+        .empty-cart {
+            color: #6c757d;
+        }
+
+        .empty-cart i {
+            opacity: 0.5;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(58, 77, 57, 0.25);
+        }
+
+        .store-feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .store-feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(58, 77, 57, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .store-tag {
+            background-color: rgba(142, 124, 104, 0.1);
+            color: var(--secondary);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .cart-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1050;
+            display: none;
+        }
+
+        @keyframes cartUpdate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .cart-update {
+            animation: cartUpdate 0.3s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991.98px) {
+            .cart-sidebar {
+                position: static;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .store-banner {
+                padding: 2rem 1rem !important;
+            }
+            
+            .store-banner h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light-bg text-dark">
+    <!-- Header / Navigation Bar -->
+    <header class="bg-white shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-xl px-4">
+                <!-- Logo area -->
+                <a href="home.html" class="navbar-brand fs-4 fw-bold text-primary-custom d-flex align-items-center">
+                    <img src="../images/logo.jpg" alt="PriMeri Logo" width="48" height="48" class="me-2">
+                    PriMeri
+                </a>
+
+                <!-- Navbar Toggler for mobile support -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="home.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="catalog.html">Catalog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="stores.html">Stores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="../php/contact.php">Contact</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <a href="login.html">
+                            <button class="btn btn-link text-dark me-2 transition">Log In</button>
+                        </a>
+                        <a href="signup.html">
+                            <button class="btn bg-primary-custom text-white px-4 py-2 rounded-3 shadow btn-hover-primary">Get Started</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Item added to cart!</strong> Your item has been successfully added to your shopping cart.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="container-xl px-4 py-5">
+        <!-- Store Detail View -->
+        <main id="store-detail-view">
+            <!-- Store will be dynamically loaded here -->
+        </main>
+        <!-- End Store Detail View -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg-custom text-white mt-5">
+        <div class="container-xl px-4 py-4 text-center">
+            <p class="mb-0">&copy; 2025 PriMeri.</p>
+        </div>
+    </footer>
+
+    <!-- Load Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script>
+        // Store data - in a real app, this would come from a database
+        const stores = {
+            1: {
+                id: 1,
+                name: "Urban Threads Co.",
+                description: "Premium custom apparel manufacturer specializing in corporate uniforms and branded clothing.",
+                category: "apparel",
+                image: "../images/Urban Threads Co..jpg",
+                minOrder: 50,
+                leadTime: "7-14 business days",
+                customization: "Logo printing & embroidery",
+                rating: 4.8,
+                reviews: 142,
+                tags: ["T-shirts", "Hoodies", "Corporate Uniforms", "Embroidery"],
+                features: [
+                    "Premium quality materials",
+                    "Custom branding options",
+                    "Bulk order discounts",
+                    "Fast turnaround times"
+                ],
+                products: [
+                    {
+                        id: 101,
+                        name: "Premium Cotton T-Shirts",
+                        description: "High-quality 100% cotton t-shirts with custom printing. Perfect for corporate events and promotional giveaways.",
+                        price: 450,
+                        category: "tshirts",
+                        image: "../images/tshirt-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Printing", "Custom Colors", "Sizes: S-XXL"]
+                    },
+                    {
+                        id: 102,
+                        name: "Embroidered Hoodies",
+                        description: "Premium fleece hoodies with professional embroidery. Available in multiple colors and sizes.",
+                        price: 1200,
+                        category: "hoodies",
+                        image: "../images/hoodie-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Embroidery", "Custom Text", "Sizes: S-XXL"]
+                    },
+                    {
+                        id: 103,
+                        name: "Corporate Polo Shirts",
+                        description: "Professional polo shirts for corporate uniforms. Durable fabric with custom embroidery options.",
+                        price: 850,
+                        category: "uniforms",
+                        image: "../images/polo-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Embroidery", "Custom Colors", "Sizes: S-XXL"]
+                    },
+                    {
+                        id: 104,
+                        name: "Branded Jackets",
+                        description: "Weather-resistant jackets with custom printing. Ideal for outdoor corporate events.",
+                        price: 1800,
+                        category: "uniforms",
+                        image: "../images/jacket-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Printing", "Custom Design", "Sizes: S-XXL"]
+                    },
+                    {
+                        id: 105,
+                        name: "Baseball Caps",
+                        description: "Adjustable baseball caps with custom embroidery. Perfect for branding and promotions.",
+                        price: 350,
+                        category: "accessories",
+                        image: "../images/cap-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Embroidery", "Custom Colors"]
+                    },
+                    {
+                        id: 106,
+                        name: "Tote Bags",
+                        description: "Eco-friendly canvas tote bags with custom printing. Great for corporate gifts and events.",
+                        price: 280,
+                        category: "accessories",
+                        image: "../images/tote-product.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Logo Printing", "Custom Design"]
+                    }
+                ]
+            },
+            11: {
+                id: 11,
+                name: "Fashion Forward Prints",
+                description: "Modern apparel manufacturer with innovative printing techniques and sustainable fabrics.",
+                category: "apparel",
+                image: "../images/Fashion Forward Prints.jpg",
+                minOrder: 50,
+                leadTime: "10-15 business days",
+                customization: "Sublimation printing & eco-fabrics",
+                rating: 4.6,
+                reviews: 89,
+                tags: ["Eco-Fabrics", "Sublimation Printing", "Activewear", "Custom Designs"],
+                features: [
+                    "Sustainable fabric options",
+                    "Advanced printing technology",
+                    "Custom design services",
+                    "Eco-friendly production"
+                ],
+                products: [
+                    {
+                        id: 1101,
+                        name: "Sublimation Printed T-Shirts",
+                        description: "Vibrant all-over print t-shirts using advanced sublimation technology for lasting designs.",
+                        price: 550,
+                        category: "tshirts",
+                        image: "../images/sublimation-tshirt.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["All-over Printing", "Custom Designs", "Eco-friendly Inks"]
+                    },
+                    {
+                        id: 1102,
+                        name: "Eco-Friendly Activewear",
+                        description: "Performance activewear made from recycled materials with moisture-wicking technology.",
+                        price: 950,
+                        category: "activewear",
+                        image: "../images/activewear.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Custom Colors", "Brand Logos", "Performance Fit"]
+                    },
+                    {
+                        id: 1103,
+                        name: "Sustainable Hoodies",
+                        description: "Comfortable hoodies made from organic cotton with eco-friendly printing options.",
+                        price: 1100,
+                        category: "hoodies",
+                        image: "../images/eco-hoodie.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Organic Materials", "Eco-Printing", "Custom Fit"]
+                    }
+                ]
+            },
+            12: {
+                id: 12,
+                name: "Professional Wear Hub",
+                description: "Specialists in corporate and hospitality uniforms with premium finishing and detailing.",
+                category: "apparel",
+                image: "../images/Professional Wear Hub.jpg",
+                minOrder: 25,
+                leadTime: "5-10 business days",
+                customization: "Custom logos & professional tailoring",
+                rating: 4.9,
+                reviews: 203,
+                tags: ["Business Attire", "Hotel Uniforms", "Restaurant Wear", "Custom Logos"],
+                features: [
+                    "Professional tailoring services",
+                    "Premium fabric selection",
+                    "Industry-specific designs",
+                    "Quick turnaround times"
+                ],
+                products: [
+                    {
+                        id: 1201,
+                        name: "Executive Blazers",
+                        description: "Premium tailored blazers for corporate executives with custom embroidery options.",
+                        price: 2500,
+                        category: "business",
+                        image: "../images/blazer.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Custom Tailoring", "Logo Embroidery", "Premium Fabrics"]
+                    },
+                    {
+                        id: 1202,
+                        name: "Hospitality Uniforms",
+                        description: "Professional uniforms for hotel and restaurant staff with durable, easy-care fabrics.",
+                        price: 750,
+                        category: "uniforms",
+                        image: "../images/hospitality-uniform.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Custom Colors", "Brand Logos", "Multiple Sizes"]
+                    },
+                    {
+                        id: 1203,
+                        name: "Corporate Dress Shirts",
+                        description: "Classic dress shirts with custom embroidery for professional corporate attire.",
+                        price: 650,
+                        category: "business",
+                        image: "../images/dress-shirt.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Custom Fit", "Logo Placement", "Fabric Options"]
+                    }
+                ]
+            },
+            2: {
+                id: 2,
+                name: "Gourmet Pantry",
+                description: "Artisanal food producer creating custom-branded snacks, confections, and specialty foods.",
+                category: "food",
+                image: "../images/Gourmet Pantry.jpg",
+                minOrder: 100,
+                leadTime: "7-12 business days",
+                customization: "Custom packaging & branding",
+                rating: 4.7,
+                reviews: 156,
+                tags: ["Snacks", "Confectionery", "Coffee & Tea", "Gift Baskets"],
+                features: [
+                    "Artisanal production methods",
+                    "Custom packaging design",
+                    "Quality ingredients",
+                    "Bulk ordering available"
+                ],
+                products: [
+                    {
+                        id: 201,
+                        name: "Custom Branded Snack Boxes",
+                        description: "Premium snack assortment with custom branding for corporate gifting and events.",
+                        price: 1200,
+                        category: "snacks",
+                        image: "../images/snack-box.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Custom Branding", "Snack Selection", "Packaging Design"]
+                    },
+                    {
+                        id: 202,
+                        name: "Artisanal Chocolate Collection",
+                        description: "Handcrafted chocolates with custom packaging for corporate gifts and promotions.",
+                        price: 850,
+                        category: "confectionery",
+                        image: "../images/chocolate.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Custom Wrapping", "Logo Printing", "Flavor Selection"]
+                    },
+                    {
+                        id: 203,
+                        name: "Premium Coffee Blends",
+                        description: "Specialty coffee blends with custom labeling for corporate clients and events.",
+                        price: 450,
+                        category: "beverages",
+                        image: "../images/coffee-blend.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Custom Roasts", "Brand Labeling", "Packaging Options"]
+                    }
+                ]
+            },
+            13: {
+                id: 13,
+                name: "Organic Delights Co.",
+                description: "Certified organic food products with custom branding for health-conscious businesses.",
+                category: "food",
+                image: "../images/Organic Delights Co..jpg",
+                minOrder: 75,
+                leadTime: "8-14 business days",
+                customization: "Organic certification & custom labels",
+                rating: 4.8,
+                reviews: 134,
+                tags: ["Organic Snacks", "Gluten-Free", "Vegan Options", "Health Foods"],
+                features: [
+                    "Certified organic ingredients",
+                    "Health-conscious formulations",
+                    "Sustainable packaging",
+                    "Custom nutrition labeling"
+                ],
+                products: [
+                    {
+                        id: 1301,
+                        name: "Organic Granola Bars",
+                        description: "Nutritious organic granola bars with custom packaging for health-focused brands.",
+                        price: 380,
+                        category: "snacks",
+                        image: "../images/granola-bar.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Custom Flavors", "Organic Certification", "Brand Packaging"]
+                    },
+                    {
+                        id: 1302,
+                        name: "Vegan Protein Snacks",
+                        description: "Plant-based protein snacks with clean ingredients and custom branding options.",
+                        price: 520,
+                        category: "snacks",
+                        image: "../images/vegan-snack.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Vegan Formulations", "Custom Sizes", "Nutrition Labeling"]
+                    },
+                    {
+                        id: 1303,
+                        name: "Gluten-Free Baked Goods",
+                        description: "Delicious gluten-free baked products with custom packaging for dietary needs.",
+                        price: 680,
+                        category: "baked-goods",
+                        image: "../images/gluten-free.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Gluten-Free Options", "Custom Recipes", "Allergen Information"]
+                    }
+                ]
+            },
+            14: {
+                id: 14,
+                name: "Global Flavors Imports",
+                description: "International specialty foods and ingredients with custom packaging for diverse markets.",
+                category: "food",
+                image: "../images/Global Flavors Imports.jpg",
+                minOrder: 50,
+                leadTime: "10-20 business days",
+                customization: "International packaging & labeling",
+                rating: 4.5,
+                reviews: 98,
+                tags: ["International Foods", "Spices", "Specialty Ingredients", "Ethnic Cuisine"],
+                features: [
+                    "Global sourcing network",
+                    "Authentic international flavors",
+                    "Custom import packaging",
+                    "Cultural authenticity"
+                ],
+                products: [
+                    {
+                        id: 1401,
+                        name: "International Spice Blends",
+                        description: "Authentic spice blends from around the world with custom packaging.",
+                        price: 320,
+                        category: "spices",
+                        image: "../images/spice-blend.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Custom Blends", "Packaging Design", "Cultural Authenticity"]
+                    },
+                    {
+                        id: 1402,
+                        name: "Specialty Olive Oils",
+                        description: "Premium imported olive oils with custom labeling for gourmet markets.",
+                        price: 850,
+                        category: "ingredients",
+                        image: "../images/olive-oil.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Custom Bottling", "Label Design", "Origin Selection"]
+                    },
+                    {
+                        id: 1403,
+                        name: "Ethnic Sauce Collection",
+                        description: "Authentic sauces from various cuisines with custom packaging.",
+                        price: 450,
+                        category: "sauces",
+                        image: "../images/ethnic-sauce.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Recipe Customization", "Packaging Options", "Cultural Styles"]
+                    }
+                ]
+            },
+            3: {
+                id: 3,
+                name: "Beverage Crafters",
+                description: "Specialists in private-label beverages including water, juices, and functional drinks.",
+                category: "beverage",
+                image: "../images/Beverage Crafters.jpg",
+                minOrder: 200,
+                leadTime: "14-21 business days",
+                customization: "Custom formulations & labeling",
+                rating: 4.6,
+                reviews: 178,
+                tags: ["Bottled Water", "Juices", "Energy Drinks", "Custom Labels"],
+                features: [
+                    "Custom beverage formulations",
+                    "FDA-compliant production",
+                    "Private labeling services",
+                    "Quality testing"
+                ],
+                products: [
+                    {
+                        id: 301,
+                        name: "Custom Label Water",
+                        description: "Premium bottled water with custom labeling for events and corporate branding.",
+                        price: 45,
+                        category: "water",
+                        image: "../images/custom-water.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Label Design", "Bottle Size", "Water Source"]
+                    },
+                    {
+                        id: 302,
+                        name: "Private Label Juices",
+                        description: "Fresh pressed juices with custom formulations and branding options.",
+                        price: 120,
+                        category: "juices",
+                        image: "../images/custom-juice.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Flavor Creation", "Nutrition Profile", "Packaging Design"]
+                    },
+                    {
+                        id: 303,
+                        name: "Functional Energy Drinks",
+                        description: "Custom formulated energy drinks with branded packaging.",
+                        price: 150,
+                        category: "energy-drinks",
+                        image: "../images/energy-drink.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Formula Development", "Brand Packaging", "Functional Ingredients"]
+                    }
+                ]
+            },
+            15: {
+                id: 15,
+                name: "Artisan Coffee Roasters",
+                description: "Premium coffee beans and custom blends with branded packaging for corporate clients.",
+                category: "beverage",
+                image: "../images/Artisan Coffee Roasters.jpg",
+                minOrder: 100,
+                leadTime: "7-10 business days",
+                customization: "Custom roasting & packaging",
+                rating: 4.9,
+                reviews: 245,
+                tags: ["Coffee Beans", "Custom Blends", "Tea Selection", "Brewing Accessories"],
+                features: [
+                    "Small-batch roasting",
+                    "Custom blend development",
+                    "Sustainable sourcing",
+                    "Expert barista consultation"
+                ],
+                products: [
+                    {
+                        id: 1501,
+                        name: "Signature Coffee Blends",
+                        description: "Custom roasted coffee blends with branded packaging for corporate clients.",
+                        price: 680,
+                        category: "coffee",
+                        image: "../images/coffee-blend.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Custom Roasting", "Blend Creation", "Packaging Design"]
+                    },
+                    {
+                        id: 1502,
+                        name: "Premium Tea Selection",
+                        description: "Curated tea varieties with custom packaging for corporate gifting.",
+                        price: 450,
+                        category: "tea",
+                        image: "../images/tea-selection.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Tea Blending", "Packaging Options", "Brand Labeling"]
+                    },
+                    {
+                        id: 1503,
+                        name: "Brewing Accessories Kit",
+                        description: "Complete coffee brewing kit with custom branding for corporate clients.",
+                        price: 1200,
+                        category: "accessories",
+                        image: "../images/brewing-kit.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Kit Contents", "Branding Elements", "Instruction Materials"]
+                    }
+                ]
+            },
+            16: {
+                id: 16,
+                name: "Craft Soda Works",
+                description: "Custom formulated craft sodas and specialty beverages with unique flavor profiles.",
+                category: "beverage",
+                image: "../images/Craft Soda Works.jpg",
+                minOrder: 150,
+                leadTime: "10-15 business days",
+                customization: "Unique flavors & packaging",
+                rating: 4.7,
+                reviews: 167,
+                tags: ["Craft Sodas", "Mixers", "Limited Editions", "Custom Flavors"],
+                features: [
+                    "Artisan flavor creation",
+                    "Natural ingredients",
+                    "Custom bottle design",
+                    "Limited edition options"
+                ],
+                products: [
+                    {
+                        id: 1601,
+                        name: "Custom Craft Sodas",
+                        description: "Artisanal craft sodas with unique flavor profiles and custom labeling.",
+                        price: 95,
+                        category: "sodas",
+                        image: "../images/craft-soda.jpg",
+                        minOrder: 150,
+                        inStock: true,
+                        customization: ["Flavor Development", "Label Design", "Bottle Selection"]
+                    },
+                    {
+                        id: 1602,
+                        name: "Premium Cocktail Mixers",
+                        description: "Specialty mixers for cocktails with custom formulations and packaging.",
+                        price: 180,
+                        category: "mixers",
+                        image: "../images/cocktail-mixer.jpg",
+                        minOrder: 150,
+                        inStock: true,
+                        customization: ["Mixer Formulas", "Packaging Design", "Usage Instructions"]
+                    },
+                    {
+                        id: 1603,
+                        name: "Limited Edition Beverages",
+                        description: "Seasonal and limited edition beverages with exclusive packaging.",
+                        price: 120,
+                        category: "specialty",
+                        image: "../images/limited-edition.jpg",
+                        minOrder: 150,
+                        inStock: true,
+                        customization: ["Seasonal Themes", "Exclusive Packaging", "Limited Production"]
+                    }
+                ]
+            },
+            4: {
+                id: 4,
+                name: "Packaging Prodigy",
+                description: "Custom packaging solutions for retail, e-commerce, and corporate branding needs.",
+                category: "packaging",
+                image: "../images/Packaging Prodigy.jpg",
+                minOrder: 500,
+                leadTime: "10-20 business days",
+                customization: "Full packaging design services",
+                rating: 4.8,
+                reviews: 189,
+                tags: ["Boxes", "Bags", "Labels", "Display Packaging"],
+                features: [
+                    "Complete design services",
+                    "Sustainable material options",
+                    "Prototype development",
+                    "Bulk production capabilities"
+                ],
+                products: [
+                    {
+                        id: 401,
+                        name: "Custom Retail Boxes",
+                        description: "Premium custom boxes for retail products with brand-specific designs.",
+                        price: 25,
+                        category: "boxes",
+                        image: "../images/retail-box.jpg",
+                        minOrder: 500,
+                        inStock: true,
+                        customization: ["Box Design", "Material Selection", "Printing Options"]
+                    },
+                    {
+                        id: 402,
+                        name: "Branded Shopping Bags",
+                        description: "Custom shopping bags with brand logos and designs for retail stores.",
+                        price: 12,
+                        category: "bags",
+                        image: "../images/shopping-bag.jpg",
+                        minOrder: 500,
+                        inStock: true,
+                        customization: ["Bag Style", "Print Quality", "Handle Options"]
+                    },
+                    {
+                        id: 403,
+                        name: "Product Labels & Stickers",
+                        description: "Custom labels and stickers for product branding and information.",
+                        price: 8,
+                        category: "labels",
+                        image: "../images/product-label.jpg",
+                        minOrder: 500,
+                        inStock: true,
+                        customization: ["Label Design", "Material Type", "Adhesive Options"]
+                    }
+                ]
+            },
+            17: {
+                id: 17,
+                name: "Eco-Pack Solutions",
+                description: "Sustainable and biodegradable packaging options for environmentally conscious brands.",
+                category: "packaging",
+                image: "../images/Eco-Pack Solutions.jpg",
+                minOrder: 300,
+                leadTime: "12-18 business days",
+                customization: "Eco-friendly materials & design",
+                rating: 4.9,
+                reviews: 234,
+                tags: ["Biodegradable", "Recycled Materials", "Compostable", "Eco-Friendly"],
+                features: [
+                    "Certified sustainable materials",
+                    "Carbon-neutral production",
+                    "Compostable options",
+                    "Environmental certifications"
+                ],
+                products: [
+                    {
+                        id: 1701,
+                        name: "Compostable Packaging",
+                        description: "Fully compostable packaging solutions for eco-conscious brands.",
+                        price: 35,
+                        category: "compostable",
+                        image: "../images/compostable-packaging.jpg",
+                        minOrder: 300,
+                        inStock: true,
+                        customization: ["Material Selection", "Design Options", "Certification Requirements"]
+                    },
+                    {
+                        id: 1702,
+                        name: "Recycled Material Boxes",
+                        description: "Packaging made from 100% recycled materials with custom printing.",
+                        price: 28,
+                        category: "recycled",
+                        image: "../images/recycled-box.jpg",
+                        minOrder: 300,
+                        inStock: true,
+                        customization: ["Recycled Content", "Printing Methods", "Box Styles"]
+                    },
+                    {
+                        id: 1703,
+                        name: "Sustainable Mailers",
+                        description: "Eco-friendly shipping mailers made from sustainable materials.",
+                        price: 15,
+                        category: "mailers",
+                        image: "../images/eco-mailer.jpg",
+                        minOrder: 300,
+                        inStock: true,
+                        customization: ["Material Options", "Size Variations", "Brand Printing"]
+                    }
+                ]
+            },
+            18: {
+                id: 18,
+                name: "Luxury Packaging Co.",
+                description: "Premium packaging solutions for high-end products with custom finishes and materials.",
+                category: "packaging",
+                image: "../images/Luxury Packaging Co..jpg",
+                minOrder: 200,
+                leadTime: "15-25 business days",
+                customization: "Luxury finishes & materials",
+                rating: 4.7,
+                reviews: 156,
+                tags: ["Premium Materials", "Foil Stamping", "Embossing", "Custom Inserts"],
+                features: [
+                    "Luxury material selection",
+                    "Premium finishing techniques",
+                    "Custom insert design",
+                    "High-end presentation"
+                ],
+                products: [
+                    {
+                        id: 1801,
+                        name: "Foil-Stamped Luxury Boxes",
+                        description: "Premium boxes with foil stamping and embossing for luxury products.",
+                        price: 85,
+                        category: "luxury-boxes",
+                        image: "../images/foil-box.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Foil Colors", "Embossing Patterns", "Material Quality"]
+                    },
+                    {
+                        id: 1802,
+                        name: "Custom Presentation Inserts",
+                        description: "Luxury inserts and padding for high-value product presentation.",
+                        price: 45,
+                        category: "inserts",
+                        image: "../images/presentation-insert.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Insert Design", "Material Selection", "Brand Elements"]
+                    },
+                    {
+                        id: 1803,
+                        name: "Premium Gift Packaging",
+                        description: "Complete gift packaging solutions with luxury finishes and materials.",
+                        price: 120,
+                        category: "gift-packaging",
+                        image: "../images/gift-packaging.jpg",
+                        minOrder: 200,
+                        inStock: true,
+                        customization: ["Complete Design", "Material Options", "Finishing Techniques"]
+                    }
+                ]
+            },
+            5: {
+                id: 5,
+                name: "Eco-Gifts Collective",
+                description: "Sustainable corporate gift solutions with eco-friendly packaging and products.",
+                category: "gifts",
+                image: "../images/Eco-Gifts Collective.jpg",
+                minOrder: 50,
+                leadTime: "10-15 business days",
+                customization: "Eco-friendly gift curation",
+                rating: 4.8,
+                reviews: 198,
+                tags: ["Gift Boxes", "Promotional Items", "Eco-Friendly", "Custom Sets"],
+                features: [
+                    "Sustainable product sourcing",
+                    "Eco-friendly packaging",
+                    "Custom gift curation",
+                    "Corporate branding options"
+                ],
+                products: [
+                    {
+                        id: 501,
+                        name: "Sustainable Gift Boxes",
+                        description: "Curated gift boxes with eco-friendly products and sustainable packaging.",
+                        price: 1500,
+                        category: "gift-boxes",
+                        image: "../images/eco-gift-box.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Product Selection", "Packaging Design", "Brand Elements"]
+                    },
+                    {
+                        id: 502,
+                        name: "Corporate Wellness Kits",
+                        description: "Wellness-focused gift kits with sustainable products for employees.",
+                        price: 850,
+                        category: "wellness-kits",
+                        image: "../images/wellness-kit.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Kit Contents", "Branding Options", "Packaging Style"]
+                    },
+                    {
+                        id: 503,
+                        name: "Eco-Friendly Promotional Items",
+                        description: "Sustainable promotional products with custom branding.",
+                        price: 280,
+                        category: "promotional",
+                        image: "../images/eco-promo.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Product Selection", "Brand Application", "Material Options"]
+                    }
+                ]
+            },
+            19: {
+                id: 19,
+                name: "Corporate Gifts Unlimited",
+                description: "Comprehensive corporate gifting solutions for employee recognition and client appreciation.",
+                category: "gifts",
+                image: "../images/Corporate Gifts Unlimited.jpg",
+                minOrder: 25,
+                leadTime: "7-12 business days",
+                customization: "Full gift program management",
+                rating: 4.6,
+                reviews: 167,
+                tags: ["Employee Gifts", "Client Appreciation", "Holiday Packages", "Bulk Orders"],
+                features: [
+                    "Complete gift program management",
+                    "Bulk order discounts",
+                    "Seasonal collections",
+                    "Personalization services"
+                ],
+                products: [
+                    {
+                        id: 1901,
+                        name: "Employee Recognition Gifts",
+                        description: "Custom gifts for employee recognition programs and milestones.",
+                        price: 750,
+                        category: "employee-gifts",
+                        image: "../images/employee-gift.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Gift Selection", "Personalization", "Packaging Options"]
+                    },
+                    {
+                        id: 1902,
+                        name: "Client Appreciation Sets",
+                        description: "Premium gift sets for client appreciation and relationship building.",
+                        price: 1200,
+                        category: "client-gifts",
+                        image: "../images/client-gift.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Product Curation", "Brand Alignment", "Presentation Quality"]
+                    },
+                    {
+                        id: 1903,
+                        name: "Holiday Gift Collections",
+                        description: "Seasonal gift collections for corporate holiday giving programs.",
+                        price: 950,
+                        category: "holiday-gifts",
+                        image: "../images/holiday-gift.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Seasonal Themes", "Budget Options", "Delivery Scheduling"]
+                    }
+                ]
+            },
+            20: {
+                id: 20,
+                name: "Luxury Gift Creations",
+                description: "High-end corporate gifts and executive presents with premium materials and customization.",
+                category: "gifts",
+                image: "../images/Luxury Gift Creations.jpg",
+                minOrder: 10,
+                leadTime: "14-21 business days",
+                customization: "Premium personalization",
+                rating: 4.9,
+                reviews: 89,
+                tags: ["Executive Gifts", "Luxury Items", "Premium Brands", "Personalization"],
+                features: [
+                    "Premium brand partnerships",
+                    "Executive-level personalization",
+                    "Luxury packaging",
+                    "White-glove service"
+                ],
+                products: [
+                    {
+                        id: 2001,
+                        name: "Executive Gift Sets",
+                        description: "Luxury gift sets for C-level executives and high-value clients.",
+                        price: 2500,
+                        category: "executive-gifts",
+                        image: "../images/executive-gift.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Premium Products", "Personal Engraving", "Luxury Packaging"]
+                    },
+                    {
+                        id: 2002,
+                        name: "Branded Luxury Items",
+                        description: "High-end branded items with subtle corporate branding.",
+                        price: 1800,
+                        category: "luxury-items",
+                        image: "../images/luxury-item.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Item Selection", "Discreet Branding", "Quality Materials"]
+                    },
+                    {
+                        id: 2003,
+                        name: "Custom Corporate Awards",
+                        description: "Premium awards and recognition items with custom engraving.",
+                        price: 3200,
+                        category: "awards",
+                        image: "../images/corporate-award.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Award Design", "Engraving Details", "Presentation Cases"]
+                    }
+                ]
+            },
+            6: {
+                id: 6,
+                name: "Precision Engraving",
+                description: "Laser engraving specialists for wood, metal, and acrylic promotional products.",
+                category: "engraving",
+                image: "../images/Precision Engraving.jpg",
+                minOrder: 50,
+                leadTime: "7-10 business days",
+                customization: "Precision laser engraving",
+                rating: 4.7,
+                reviews: 145,
+                tags: ["Keychains", "Plaques", "Trophies", "Corporate Awards"],
+                features: [
+                    "High-precision laser technology",
+                    "Multiple material options",
+                    "Detailed design capabilities",
+                    "Quality assurance"
+                ],
+                products: [
+                    {
+                        id: 601,
+                        name: "Custom Engraved Keychains",
+                        description: "Premium keychains with precision laser engraving for corporate branding.",
+                        price: 120,
+                        category: "keychains",
+                        image: "../images/engraved-keychain.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Material Selection", "Design Complexity", "Finish Options"]
+                    },
+                    {
+                        id: 602,
+                        name: "Award Plaques & Trophies",
+                        description: "Custom plaques and trophies with detailed engraving for corporate recognition.",
+                        price: 450,
+                        category: "plaques",
+                        image: "../images/award-plaque.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Plaque Design", "Engraving Details", "Material Quality"]
+                    },
+                    {
+                        id: 603,
+                        name: "Corporate Branded Items",
+                        description: "Various corporate items with precision engraving for promotions.",
+                        price: 280,
+                        category: "corporate-items",
+                        image: "../images/branded-items.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Item Selection", "Engraving Placement", "Design Requirements"]
+                    }
+                ]
+            },
+            21: {
+                id: 21,
+                name: "Metal Works Engraving",
+                description: "Specialists in metal engraving for industrial, corporate, and promotional applications.",
+                category: "engraving",
+                image: "../images/Metal Works Engraving.jpg",
+                minOrder: 25,
+                leadTime: "8-12 business days",
+                customization: "Industrial-grade metal engraving",
+                rating: 4.8,
+                reviews: 112,
+                tags: ["Metal Tags", "Industrial Marking", "Nameplates", "Serial Numbers"],
+                features: [
+                    "Industrial-grade equipment",
+                    "Durable metal options",
+                    "Permanent marking",
+                    "Technical specifications"
+                ],
+                products: [
+                    {
+                        id: 2101,
+                        name: "Industrial Metal Tags",
+                        description: "Durable metal tags with permanent engraving for industrial use.",
+                        price: 85,
+                        category: "metal-tags",
+                        image: "../images/metal-tag.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Metal Type", "Tag Size", "Engraving Depth"]
+                    },
+                    {
+                        id: 2102,
+                        name: "Corporate Nameplates",
+                        description: "Professional nameplates with precision engraving for offices and facilities.",
+                        price: 150,
+                        category: "nameplates",
+                        image: "../images/nameplate.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Plate Design", "Mounting Options", "Finish Selection"]
+                    },
+                    {
+                        id: 2103,
+                        name: "Serial Number Plates",
+                        description: "Custom serial number plates for equipment and product identification.",
+                        price: 65,
+                        category: "serial-plates",
+                        image: "../images/serial-plate.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Numbering Systems", "Plate Material", "Installation Requirements"]
+                    }
+                ]
+            },
+            22: {
+                id: 22,
+                name: "Crystal Awards Co.",
+                description: "Custom crystal and glass awards with precision laser engraving for corporate recognition.",
+                category: "engraving",
+                image: "../images/Crystal Awards Co..jpg",
+                minOrder: 10,
+                leadTime: "10-15 business days",
+                customization: "Crystal & glass laser engraving",
+                rating: 4.9,
+                reviews: 178,
+                tags: ["Crystal Awards", "Glass Engraving", "Trophy Design", "Recognition Items"],
+                features: [
+                    "Premium crystal materials",
+                    "3D laser engraving",
+                    "Custom award design",
+                    "Presentation packaging"
+                ],
+                products: [
+                    {
+                        id: 2201,
+                        name: "Crystal Achievement Awards",
+                        description: "Premium crystal awards with 3D laser engraving for corporate recognition.",
+                        price: 850,
+                        category: "crystal-awards",
+                        image: "../images/crystal-award.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Crystal Quality", "Engraving Design", "Award Size"]
+                    },
+                    {
+                        id: 2202,
+                        name: "Glass Service Awards",
+                        description: "Elegant glass awards with detailed engraving for service recognition.",
+                        price: 650,
+                        category: "glass-awards",
+                        image: "../images/glass-award.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Glass Type", "Engraving Style", "Base Options"]
+                    },
+                    {
+                        id: 2203,
+                        name: "Custom Trophy Designs",
+                        description: "Bespoke trophy designs with combination materials and engraving.",
+                        price: 1200,
+                        category: "trophies",
+                        image: "../images/custom-trophy.jpg",
+                        minOrder: 10,
+                        inStock: true,
+                        customization: ["Design Creation", "Material Combination", "Engraving Details"]
+                    }
+                ]
+            },
+            7: {
+                id: 7,
+                name: "Pure Elements",
+                description: "Private label health, beauty, and personal care products with custom formulations.",
+                category: "health",
+                image: "../images/Pure Elements.png",
+                minOrder: 100,
+                leadTime: "14-21 business days",
+                customization: "Custom formulations & packaging",
+                rating: 4.7,
+                reviews: 234,
+                tags: ["Soaps", "Lotions", "Sanitizers", "Skincare"],
+                features: [
+                    "Custom formulation development",
+                    "Natural ingredient options",
+                    "FDA-compliant production",
+                    "Private labeling services"
+                ],
+                products: [
+                    {
+                        id: 701,
+                        name: "Custom Formulated Soaps",
+                        description: "Private label soaps with custom scents and formulations for brands.",
+                        price: 45,
+                        category: "soaps",
+                        image: "../images/custom-soap.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Scent Development", "Formula Creation", "Packaging Design"]
+                    },
+                    {
+                        id: 702,
+                        name: "Branded Lotions & Creams",
+                        description: "Custom formulated lotions and creams with private labeling.",
+                        price: 85,
+                        category: "lotions",
+                        image: "../images/custom-lotion.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Skin Type Formulation", "Scent Options", "Packaging Style"]
+                    },
+                    {
+                        id: 703,
+                        name: "Hand Sanitizer Solutions",
+                        description: "Custom branded hand sanitizers with various scent and formula options.",
+                        price: 35,
+                        category: "sanitizers",
+                        image: "../images/custom-sanitizer.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Formula Strength", "Scent Selection", "Bottle Design"]
+                    }
+                ]
+            },
+            23: {
+                id: 23,
+                name: "Natural Wellness Co.",
+                description: "Organic and natural health products with custom formulations and private labeling.",
+                category: "health",
+                image: "../images/Natural Wellness Co..png",
+                minOrder: 75,
+                leadTime: "12-18 business days",
+                customization: "Organic formulations & labeling",
+                rating: 4.8,
+                reviews: 189,
+                tags: ["Organic Products", "Supplements", "Essential Oils", "Natural Remedies"],
+                features: [
+                    "Certified organic ingredients",
+                    "Natural formulation expertise",
+                    "Sustainable sourcing",
+                    "Third-party testing"
+                ],
+                products: [
+                    {
+                        id: 2301,
+                        name: "Organic Supplement Formulas",
+                        description: "Custom organic supplement formulations with private labeling.",
+                        price: 120,
+                        category: "supplements",
+                        image: "../images/organic-supplement.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Formula Development", "Organic Certification", "Packaging Design"]
+                    },
+                    {
+                        id: 2302,
+                        name: "Essential Oil Blends",
+                        description: "Custom essential oil blends with therapeutic properties and branding.",
+                        price: 95,
+                        category: "essential-oils",
+                        image: "../images/essential-oil.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Blend Creation", "Therapeutic Properties", "Bottle Design"]
+                    },
+                    {
+                        id: 2303,
+                        name: "Natural Skincare Products",
+                        description: "Organic skincare products with custom formulations and packaging.",
+                        price: 150,
+                        category: "skincare",
+                        image: "../images/natural-skincare.jpg",
+                        minOrder: 75,
+                        inStock: true,
+                        customization: ["Skin Type Formulation", "Ingredient Selection", "Packaging Options"]
+                    }
+                ]
+            },
+            24: {
+                id: 24,
+                name: "Luxury Beauty Labs",
+                description: "Premium skincare and cosmetics with advanced formulations and elegant packaging.",
+                category: "health",
+                image: "../images/Luxury Beauty Labs.png",
+                minOrder: 50,
+                leadTime: "15-25 business days",
+                customization: "Luxury formulations & packaging",
+                rating: 4.9,
+                reviews: 156,
+                tags: ["Skincare", "Cosmetics", "Anti-Aging", "Luxury Packaging"],
+                features: [
+                    "Advanced formulation technology",
+                    "Luxury packaging design",
+                    "Clinical testing",
+                    "Premium ingredient sourcing"
+                ],
+                products: [
+                    {
+                        id: 2401,
+                        name: "Luxury Skincare Collection",
+                        description: "Premium skincare products with advanced formulations and elegant packaging.",
+                        price: 450,
+                        category: "skincare",
+                        image: "../images/luxury-skincare.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Product Formulation", "Packaging Design", "Brand Positioning"]
+                    },
+                    {
+                        id: 2402,
+                        name: "Custom Cosmetic Lines",
+                        description: "Bespoke cosmetic products with custom colors and formulations.",
+                        price: 320,
+                        category: "cosmetics",
+                        image: "../images/custom-cosmetics.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Color Development", "Formula Creation", "Packaging Style"]
+                    },
+                    {
+                        id: 2403,
+                        name: "Anti-Aging Solutions",
+                        description: "Advanced anti-aging products with clinical-grade formulations.",
+                        price: 680,
+                        category: "anti-aging",
+                        image: "../images/anti-aging.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Formula Strength", "Clinical Testing", "Packaging Luxury"]
+                    }
+                ]
+            },
+            8: {
+                id: 8,
+                name: "TechStyle Gear",
+                description: "Branded tech accessories and electronics with precision logo placement.",
+                category: "tech",
+                image: "../images/TechStyle Gear.png",
+                minOrder: 100,
+                leadTime: "10-15 business days",
+                customization: "Precision tech branding",
+                rating: 4.7,
+                reviews: 267,
+                tags: ["Power Banks", "Phone Cases", "Cables", "Chargers"],
+                features: [
+                    "Precision branding technology",
+                    "Quality electronic components",
+                    "Custom product development",
+                    "Bulk order capabilities"
+                ],
+                products: [
+                    {
+                        id: 801,
+                        name: "Custom Power Banks",
+                        description: "High-capacity power banks with precise logo placement for branding.",
+                        price: 450,
+                        category: "power-banks",
+                        image: "../images/custom-powerbank.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Capacity Options", "Branding Placement", "Color Selection"]
+                    },
+                    {
+                        id: 802,
+                        name: "Branded Phone Cases",
+                        description: "Premium phone cases with custom printing and brand logos.",
+                        price: 280,
+                        category: "phone-cases",
+                        image: "../images/branded-case.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Phone Models", "Print Quality", "Case Material"]
+                    },
+                    {
+                        id: 803,
+                        name: "Custom Charging Cables",
+                        description: "Durable charging cables with custom colors and branding.",
+                        price: 150,
+                        category: "cables",
+                        image: "../images/custom-cable.jpg",
+                        minOrder: 100,
+                        inStock: true,
+                        customization: ["Cable Type", "Color Options", "Branding Method"]
+                    }
+                ]
+            },
+            25: {
+                id: 25,
+                name: "Smart Office Tech",
+                description: "Custom tech solutions for modern workplaces including branded devices and accessories.",
+                category: "tech",
+                image: "../images/Smart Office Tech.png",
+                minOrder: 50,
+                leadTime: "12-18 business days",
+                customization: "Office tech customization",
+                rating: 4.6,
+                reviews: 134,
+                tags: ["Office Tech", "Wireless Chargers", "Conference Gear", "Smart Devices"],
+                features: [
+                    "Office-specific technology",
+                    "Wireless charging solutions",
+                    "Conference room integration",
+                    "Smart office systems"
+                ],
+                products: [
+                    {
+                        id: 2501,
+                        name: "Wireless Charging Stations",
+                        description: "Custom wireless charging solutions for modern office environments.",
+                        price: 650,
+                        category: "wireless-chargers",
+                        image: "../images/wireless-charger.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Charging Capacity", "Design Integration", "Brand Elements"]
+                    },
+                    {
+                        id: 2502,
+                        name: "Conference Room Technology",
+                        description: "Custom conference room tech with branded elements and integration.",
+                        price: 1200,
+                        category: "conference-gear",
+                        image: "../images/conference-tech.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Tech Integration", "Branding Options", "Installation Support"]
+                    },
+                    {
+                        id: 2503,
+                        name: "Smart Office Devices",
+                        description: "Connected office devices with custom branding and functionality.",
+                        price: 850,
+                        category: "smart-devices",
+                        image: "../images/smart-office.jpg",
+                        minOrder: 50,
+                        inStock: true,
+                        customization: ["Device Selection", "Brand Integration", "Functionality Setup"]
+                    }
+                ]
+            },
+            26: {
+                id: 26,
+                name: "Audio Visual Pros",
+                description: "Custom audio and visual equipment with branding for corporate and event use.",
+                category: "tech",
+                image: "../images/Audio Visual Pros.png",
+                minOrder: 25,
+                leadTime: "15-25 business days",
+                customization: "AV equipment branding",
+                rating: 4.8,
+                reviews: 98,
+                tags: ["Headphones", "Speakers", "AV Equipment", "Event Tech"],
+                features: [
+                    "Professional AV equipment",
+                    "Event technology solutions",
+                    "Custom branding integration",
+                    "Technical support"
+                ],
+                products: [
+                    {
+                        id: 2601,
+                        name: "Branded Headphones",
+                        description: "Premium headphones with custom branding for corporate use and events.",
+                        price: 750,
+                        category: "headphones",
+                        image: "../images/branded-headphones.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Headphone Quality", "Branding Placement", "Color Options"]
+                    },
+                    {
+                        id: 2602,
+                        name: "Custom Speaker Systems",
+                        description: "Professional speaker systems with branded elements for events.",
+                        price: 1500,
+                        category: "speakers",
+                        image: "../images/custom-speakers.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["System Configuration", "Brand Integration", "Technical Specifications"]
+                    },
+                    {
+                        id: 2603,
+                        name: "Event AV Packages",
+                        description: "Complete audio-visual packages with custom branding for corporate events.",
+                        price: 2800,
+                        category: "av-packages",
+                        image: "../images/av-package.jpg",
+                        minOrder: 25,
+                        inStock: true,
+                        customization: ["Package Contents", "Branding Elements", "Technical Requirements"]
+                    }
+                ]
+            }
+
+        };
+
+        // Cart state
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get store ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = parseInt(urlParams.get('id')) || 1;
+            
+            // Load store data
+            const store = stores[storeId];
+            if (store) {
+                renderStoreDetail(store);
+                updateCartDisplay();
+            } else {
+                document.getElementById('store-detail-view').innerHTML = `
+                    <div class="text-center py-5">
+                        <h2 class="text-muted">Store not found</h2>
+                        <p class="text-muted">The store you're looking for doesn't exist.</p>
+                        <a href="stores.html" class="btn bg-primary-custom text-white mt-3">Back to Stores</a>
+                    </div>
+                `;
+            }
+        });
+
+        // Render store details
+        function renderStoreDetail(store) {
+            const storeDetailView = document.getElementById('store-detail-view');
+            
+            storeDetailView.innerHTML = `
+                <!-- Store Header -->
+                <div class="store-header text-center mb-5">
+                    <div class="store-banner text-white rounded-4 p-5 mb-4">
+                        <h1 class="display-5 fw-bolder mb-3">${store.name}</h1>
+                        <p class="fs-5 mb-0 mx-auto" style="max-width: 700px;">${store.description}</p>
+                    </div>
+                    
+                    <!-- Store Info -->
+                    <div class="store-info row g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                                <h6 class="fw-semibold text-primary-custom mb-2">Minimum Order</h6>
+                                <p class="mb-0">${store.minOrder} units per product</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                                <h6 class="fw-semibold text-primary-custom mb-2">Lead Time</h6>
+                                <p class="mb-0">${store.leadTime}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-card p-3 rounded-3 bg-white shadow-sm">
+                                <h6 class="fw-semibold text-primary-custom mb-2">Customization</h6>
+                                <p class="mb-0">${store.customization}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Products Section -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="fw-bolder text-dark">Available Products</h2>
+                            <div class="cart-indicator bg-primary-custom text-white rounded-pill px-3 py-1">
+                                <span id="cart-count">0</span> items in cart
+                            </div>
+                        </div>
+
+                        <!-- Store Features -->
+                        <div class="card store-detail-card p-4 mb-4">
+                            <h3 class="fw-bolder text-dark mb-4">Why Choose ${store.name}?</h3>
+                            <div class="row">
+                                ${store.features.map(feature => `
+                                    <div class="col-md-6 mb-3">
+                                        <div class="store-feature-item">
+                                            <div class="store-feature-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                </svg>
+                                            </div>
+                                            <span>${feature}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Product Tags -->
+                        <div class="mb-4">
+                            <h4 class="fw-semibold text-dark mb-3">Product Categories</h4>
+                            <div>
+                                ${store.tags.map(tag => `<span class="store-tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="products-grid row g-4" id="products-container">
+                            ${store.products.map(product => createProductCard(product)).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Cart Section -->
+                    <div class="col-lg-4">
+                        <div class="cart-sidebar card store-detail-card p-4">
+                            <h3 class="fw-semibold mb-4">Your Order</h3>
+                            
+                            <!-- Cart Items -->
+                            <div class="cart-items mb-4" id="cart-items">
+                                <div class="empty-cart text-center text-muted py-4">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mb-3">
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="20" cy="21" r="1"></circle>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    <p class="mb-0">Your cart is empty</p>
+                                    <small>Add products from the store to get started</small>
+                                </div>
+                            </div>
+
+                            <!-- Order Summary -->
+                            <div class="order-summary" id="order-summary" style="display: none;">
+                                <div class="order-summary-items mb-3" id="order-summary-items">
+                                    <!-- Items will be populated here -->
+                                </div>
+                                
+                                <div class="order-summary-totals">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Subtotal</span>
+                                        <span id="subtotal">KSh 0</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Shipping</span>
+                                        <span id="shipping">KSh 500</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Tax (5%)</span>
+                                        <span id="tax">KSh 0</span>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                                        <span>Total</span>
+                                        <span id="total">KSh 0</span>
+                                    </div>
+                                </div>
+
+                                <!-- Checkout Button -->
+                                <a href="checkout.html" class="btn bg-primary-custom text-white w-100 btn-hover-primary" id="checkout-btn">
+                                    Proceed to Checkout
+                                </a>
+                                
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">Minimum order: ${store.minOrder} units per product</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Attach event listeners to the newly created elements
+            attachProductEventListeners();
+            attachCartEventListeners();
+            
+            // Update cart count
+            updateCartCount();
+        }
+
+        // Create product card HTML
+        function createProductCard(product) {
+            const cartItem = cart.find(item => item.id === product.id);
+            const currentQuantity = cartItem ? cartItem.quantity : 0;
+            
+            return `
+                <div class="col-md-6">
+                    <div class="card product-card shadow-lg h-100 border-0 rounded-4 overflow-hidden" data-category="${product.category}">
+                        <div class="position-relative">
+                            <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+                            ${product.inStock ? 
+                                '<span class="product-badge badge bg-success">In Stock</span>' : 
+                                '<span class="product-badge badge bg-danger">Out of Stock</span>'
+                            }
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold mb-2">${product.name}</h5>
+                            <p class="card-text text-muted small mb-3">${product.description}</p>
+                            
+                            <div class="mb-3">
+                                ${product.customization.map(item => 
+                                    `<span class="badge bg-light text-dark me-1 mb-1">${item}</span>`
+                                ).join('')}
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <span class="fw-bold text-primary-custom fs-5">KSh ${product.price.toLocaleString()}</span>
+                                    <small class="text-muted d-block">per unit</small>
+                                </div>
+                                <small class="text-muted">Min: ${product.minOrder} units</small>
+                            </div>
+                            
+                            <div class="quantity-controls mb-3">
+                                <button class="quantity-btn minus" data-product-id="${product.id}">-</button>
+                                <input type="number" 
+                                       class="quantity-input" 
+                                       id="quantity-${product.id}" 
+                                       value="${currentQuantity}" 
+                                       min="0" 
+                                       step="${product.minOrder}"
+                                       data-product-id="${product.id}">
+                                <button class="quantity-btn plus" data-product-id="${product.id}">+</button>
+                            </div>
+                            
+                            <button class="btn ${currentQuantity > 0 ? 'btn-success' : 'bg-primary-custom'} text-white w-100 btn-hover-primary add-to-cart" 
+                                    data-product-id="${product.id}"
+                                    ${!product.inStock ? 'disabled' : ''}>
+                                ${currentQuantity > 0 ? 'Update Cart' : 'Add to Cart'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Attach event listeners to product elements
+        function attachProductEventListeners() {
+            // Quantity buttons
+            document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    increaseQuantity(productId);
+                });
+            });
+            
+            document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    decreaseQuantity(productId);
+                });
+            });
+            
+            // Quantity inputs
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    const quantity = parseInt(this.value) || 0;
+                    updateProductQuantity(productId, quantity);
+                });
+            });
+            
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    addToCart(productId);
+                });
+            });
+        }
+
+        // Quantity control functions
+        function increaseQuantity(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            const product = getProductById(productId);
+            const currentValue = parseInt(input.value) || 0;
+            const newValue = currentValue + product.minOrder;
+            input.value = newValue;
+            updateProductQuantity(productId, newValue);
+        }
+
+        function decreaseQuantity(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            const product = getProductById(productId);
+            const currentValue = parseInt(input.value) || 0;
+            const newValue = Math.max(0, currentValue - product.minOrder);
+            input.value = newValue;
+            updateProductQuantity(productId, newValue);
+        }
+
+        function updateProductQuantity(productId, quantity) {
+            const product = getProductById(productId);
+            const btn = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+            
+            if (quantity > 0) {
+                btn.textContent = 'Update Cart';
+                btn.classList.remove('bg-primary-custom');
+                btn.classList.add('btn-success');
+            } else {
+                btn.textContent = 'Add to Cart';
+                btn.classList.remove('btn-success');
+                btn.classList.add('bg-primary-custom');
+            }
+            
+            // Validate minimum order
+            if (quantity > 0 && quantity < product.minOrder) {
+                input.value = product.minOrder;
+                alert(`Minimum order for ${product.name} is ${product.minOrder} units.`);
+                return product.minOrder;
+            }
+            
+            return quantity;
+        }
+
+        // Get product by ID from all stores
+        function getProductById(productId) {
+            for (const storeId in stores) {
+                const store = stores[storeId];
+                const product = store.products.find(p => p.id === productId);
+                if (product) return product;
+            }
+            return null;
+        }
+
+        // Cart functionality
+        function addToCart(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            const quantity = parseInt(input.value) || 0;
+            const product = getProductById(productId);
+            
+            if (quantity < product.minOrder) {
+                alert(`Minimum order for ${product.name} is ${product.minOrder} units.`);
+                input.value = product.minOrder;
+                return;
+            }
+            
+            if (quantity === 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity = quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: quantity,
+                    image: product.image,
+                    minOrder: product.minOrder,
+                    storeId: getStoreIdByProductId(productId)
+                });
+            }
+            
+            updateCart();
+            showCartNotification(`${product.name} ${existingItemIndex > -1 ? 'updated' : 'added'} to cart`);
+        }
+
+        function getStoreIdByProductId(productId) {
+            for (const storeId in stores) {
+                const store = stores[storeId];
+                if (store.products.find(p => p.id === productId)) {
+                    return parseInt(storeId);
+                }
+            }
+            return null;
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+            
+            // Reset product card
+            const input = document.getElementById(`quantity-${productId}`);
+            const btn = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+            
+            if (input && btn) {
+                input.value = 0;
+                btn.textContent = 'Add to Cart';
+                btn.classList.remove('btn-success');
+                btn.classList.add('bg-primary-custom');
+            }
+        }
+
+        function updateCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            updateCartCount();
+            attachCartEventListeners();
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cart-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Add animation
+            cartCount.parentElement.classList.add('cart-update');
+            setTimeout(() => {
+                cartCount.parentElement.classList.remove('cart-update');
+            }, 300);
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const orderSummary = document.getElementById('order-summary');
+            const emptyCart = cartItems.querySelector('.empty-cart');
+            
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                orderSummary.style.display = 'none';
+                return;
+            }
+            
+            emptyCart.style.display = 'none';
+            orderSummary.style.display = 'block';
+            
+            // Update cart items
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const cartItemElement = createCartItem(item);
+                cartItems.appendChild(cartItemElement);
+            });
+            
+            // Update order summary
+            updateOrderSummary();
+        }
+
+        function createCartItem(item) {
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h6 class="fw-semibold mb-1">${item.name}</h6>
+                        <p class="text-muted small mb-2">KSh ${item.price.toLocaleString()} per unit</p>
+                        <div class="d-flex align-items-center">
+                            <button class="cart-quantity-btn minus me-2" data-product-id="${item.id}">-</button>
+                            <input type="number" 
+                                   class="cart-quantity-input" 
+                                   value="${item.quantity}" 
+                                   min="${item.minOrder}" 
+                                   step="${item.minOrder}"
+                                   data-product-id="${item.id}">
+                            <button class="cart-quantity-btn plus ms-2" data-product-id="${item.id}">+</button>
+                            <small class="text-muted ms-2">units</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold text-primary-custom mb-2">
+                            KSh ${(item.price * item.quantity).toLocaleString()}
+                        </div>
+                        <button class="cart-item-remove" data-product-id="${item.id}">
+                            &times;
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        function attachCartEventListeners() {
+            // Cart quantity buttons
+            document.querySelectorAll('.cart-quantity-btn.plus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    const item = cart.find(item => item.id === productId);
+                    const newQuantity = item.quantity + item.minOrder;
+                    updateCartItemQuantity(productId, newQuantity);
+                });
+            });
+            
+            document.querySelectorAll('.cart-quantity-btn.minus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    const item = cart.find(item => item.id === productId);
+                    const newQuantity = Math.max(item.minOrder, item.quantity - item.minOrder);
+                    updateCartItemQuantity(productId, newQuantity);
+                });
+            });
+            
+            // Cart quantity inputs
+            document.querySelectorAll('.cart-quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    const quantity = parseInt(this.value) || 0;
+                    updateCartItemQuantity(productId, quantity);
+                });
+            });
+            
+            // Remove buttons
+            document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    removeFromCart(productId);
+                });
+            });
+            
+            // Checkout button
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function(e) {
+                    if (cart.length === 0) {
+                        e.preventDefault();
+                        alert('Please add some products to your cart before proceeding to checkout.');
+                    }
+                });
+            }
+        }
+
+        function updateCartItemQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            
+            if (!item) return;
+            
+            if (quantity < item.minOrder) {
+                alert(`Minimum order for ${item.name} is ${item.minOrder} units.`);
+                quantity = item.minOrder;
+            }
+            
+            if (quantity === 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            item.quantity = quantity;
+            updateCart();
+            
+            // Update product card
+            const productInput = document.getElementById(`quantity-${productId}`);
+            const productBtn = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+            
+            if (productInput && productBtn) {
+                productInput.value = quantity;
+                productBtn.textContent = 'Update Cart';
+                productBtn.classList.remove('bg-primary-custom');
+                productBtn.classList.add('btn-success');
+            }
+        }
+
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = 500;
+            const tax = subtotal * 0.05; // 5% tax
+            const total = subtotal + shipping + tax;
+            
+            document.getElementById('subtotal').textContent = `KSh ${subtotal.toLocaleString()}`;
+            document.getElementById('tax').textContent = `KSh ${tax.toLocaleString()}`;
+            document.getElementById('total').textContent = `KSh ${total.toLocaleString()}`;
+            
+            // Update order summary items
+            const summaryItems = document.getElementById('order-summary-items');
+            summaryItems.innerHTML = '';
+            
+            cart.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'order-summary-item';
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${item.name} (${item.quantity} units)</span>
+                        <span class="fw-semibold">KSh ${(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                `;
+                summaryItems.appendChild(div);
+            });
+        }
+
+        function showCartNotification(message) {
+            const notification = document.querySelector('.cart-notification');
+            notification.querySelector('strong').textContent = message;
+            notification.style.display = 'block';
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Store - PriMeri</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/catalog.css">
+  <link rel="stylesheet" href="../css/create-store.css">
+</head>
+
+<body class="bg-light-bg text-dark">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-xl px-4">
+        <a href="#" class="navbar-brand fs-4 fw-bold text-primary-custom d-flex align-items-center">
+          <img src="../images/logo.jpg" alt="PriMeri Logo" width="48" height="48" class="me-2">
+          PriMeri
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="container-xl px-4 py-5">
+    <div class="text-center mb-5">
+      <h1 class="display-6 fw-bolder text-dark">Create Your Store</h1>
+      <p class="fs-5 text-muted mx-auto" style="max-width: 700px;">
+        Choose your catalog category and start adding products to your new PriMeri store.
+      </p>
+    </div>
+
+    <form class="form-section">
+
+      <!-- Step 1: Choose Catalog -->
+      <div class="mb-5">
+        <h5 class="fw-semibold mb-3 text-primary-custom">1. Choose a Catalog Category</h5>
+        <div class="row row-cols-2 row-cols-md-4 g-4 catalog-select">
+
+          <!-- Catalog 1 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="apparel" value="Branded Apparel & Uniforms" class="d-none">
+            <label for="apparel" class="catalog-option">
+              <img src="../images/Branded Apparel.png" alt="Branded Apparel & Uniforms" class="img-fluid mb-2">
+              <div>Branded Apparel & Uniforms</div>
+            </label>
+          </div>
+
+          <!-- Catalog 2 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="food" value="Gourmet Food Products" class="d-none">
+            <label for="food" class="catalog-option">
+              <img src="../images/GourmetFoodProducts.png" alt="Gourmet Food Products" class="img-fluid mb-2">
+              <div>Gourmet Food Products</div>
+            </label>
+          </div>
+
+          <!-- Catalog 3 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="beverages" value="Artisanal Beverages" class="d-none">
+            <label for="beverages" class="catalog-option">
+              <img src="../images/ArtisanalBeverages.png" alt="Artisanal Beverages" class="img-fluid mb-2">
+              <div>Artisanal Beverages</div>
+            </label>
+          </div>
+
+          <!-- Catalog 4 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="packaging" value="Branded Retail Packaging" class="d-none">
+            <label for="packaging" class="catalog-option">
+              <img src="../images/BrandedRetailPackaging.png" alt="Branded Retail Packaging" class="img-fluid mb-2">
+              <div>Branded Retail Packaging</div>
+            </label>
+          </div>
+
+          <!-- Catalog 5 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="gifts" value="Curated Corporate Gift Boxes" class="d-none">
+            <label for="gifts" class="catalog-option">
+              <img src="../images/GiftBoxes.png" alt="Curated Corporate Gift Boxes" class="img-fluid mb-2">
+              <div>Curated Corporate Gift Boxes</div>
+            </label>
+          </div>
+
+          <!-- Catalog 6 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="engraved" value="Laser Engraved Goods" class="d-none">
+            <label for="engraved" class="catalog-option">
+              <img src="../images/EngravedGoods.png" alt="Laser Engraved Goods" class="img-fluid mb-2">
+              <div>Laser Engraved Goods</div>
+            </label>
+          </div>
+
+          <!-- Catalog 7 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="health" value="Private Label Health & Beauty" class="d-none">
+            <label for="health" class="catalog-option">
+              <img src="../images/Health&Beauty.png" alt="Private Label Health & Beauty" class="img-fluid mb-2">
+              <div>Private Label Health & Beauty</div>
+            </label>
+          </div>
+
+          <!-- Catalog 8 -->
+          <div class="col text-center">
+            <input type="radio" name="catalog" id="tech" value="Branded Tech Accessories" class="d-none">
+            <label for="tech" class="catalog-option">
+              <img src="../images/BrandedTech.png" alt="Branded Tech Accessories" class="img-fluid mb-2">
+              <div>Branded Tech Accessories</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- Step 2: Add Products -->
+      <div class="mb-4">
+        <h5 class="fw-semibold mb-3 text-primary-custom">2. Add Store Products</h5>
+
+        <div id="product-list">
+          <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Product Name</label>
+                  <input type="text" class="form-control" placeholder="e.g., Cotton Polo Shirt">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Price per Unit (USD)</label>
+                  <input type="number" class="form-control" step="0.01" min="0" placeholder="e.g., 12.50">
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Product Description</label>
+                  <textarea class="form-control" rows="3" placeholder="Describe your product..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Minimum Order Quantity</label>
+                  <input type="number" class="form-control" min="1" placeholder="e.g., 10">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Maximum Order Quantity</label>
+                  <input type="number" class="form-control" placeholder="e.g., 500">
+                </div>
+
+                <div class="col-md-12 d-flex align-items-center justify-content-between mt-3">
+                  <div class="form-check form-switch custom-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="customizable1">
+                    <label class="form-check-label" for="customizable1">Product is Customizable</label>
+                  </div>
+                  <button type="button" class="btn btn-outline-danger btn-sm remove-item">Remove Item</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Product Button -->
+        <button type="button" id="addProductBtn" class="btn bg-secondary-custom text-white btn-hover-primary mt-2">
+          + Add Another Product
+        </button>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- Submit -->
+      <div class="text-center">
+        <button type="submit" class="btn bg-primary-custom text-white px-5 py-2 rounded-3 btn-hover-primary fw-semibold">
+          Create Store
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark-bg-custom text-white mt-5">
+    <div class="container-xl px-4 py-4 text-center">
+      <p class="mb-0">&copy; 2025 PriMeri.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const productList = document.getElementById('product-list');
+    const addProductBtn = document.getElementById('addProductBtn');
+
+    addProductBtn.addEventListener('click', () => {
+      const card = productList.querySelector('.card').cloneNode(true);
+      card.querySelectorAll('input, textarea').forEach(el => el.value = '');
+      card.querySelector('.form-check-input').checked = false;
+      productList.appendChild(card);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-item')) {
+        e.target.closest('.card').remove();
+      }
+    });
+  </script>
+</body>
+</html>

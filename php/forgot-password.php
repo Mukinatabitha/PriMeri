@@ -1,11 +1,8 @@
 <?php
 include 'conf.php';
 include 'connect.php';
-require '../vendor/autoload.php';
-require 'sendMail.php'; // has passwordResetEmail()
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+require 'sendMail.php';
+require 'user.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
@@ -18,24 +15,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error: Invalid email format.");
     }
 
-    $check = $conn->prepare("SELECT name FROM users WHERE email = ?");
-    $check->bind_param("s", $email);
-    $check->execute();
-    $result = $check->get_result();
-
-    if ($result->num_rows === 0) {
+    $userObj = new User($db);
+    if (!$userObj->checkEmailExists($email)) {
         die("Error: No account found with that email address.");
     }
 
-    $user = $result->fetch_assoc();
-    $name = $user['name'] ?? 'User';
-    $check->close();
-
-    // Call the password reset email function
-    $result = passwordResetEmail($email);
+    $mail = new Mail(SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_ENCRYPTION);
+    $result = $mail->passwordResetEmail($email);
 
     if ($result['status'] === 'success') {
-        echo "<script>alert('A password reset code has been sent to your email.'); 
+        echo "<script>alert('A password reset code has been sent to your email.');
               window.location.href='../html/reset-code.html';</script>";
         exit();
     } else {
@@ -43,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     // Direct access (no POST)
-    header("Location: ../html/forgot-password.html");
+    header("Location: ../html/reset-password.html");
     exit();
 }
 ?>

@@ -1,0 +1,54 @@
+.hero-section {
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+        url('../images/logo.jpg');
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    color: white;
+    padding: 120px 0;
+    text-align: center;
+}
+
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    background-color: var(--primary-custom);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.feature-icon svg {
+    width: 32px;
+    height: 32px;
+    fill: black;
+}
+
+.how-it-works-step {
+    text-align: center;
+    padding: 20px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-custom);
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-weight: bold;
+}
+
+.cta-section {
+    background-color: var(--primary-custom);
+    color: black;
+    padding: 80px 0;
+    text-align: center;
+}
