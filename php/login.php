@@ -32,8 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['account_type'] = $user['accountType'];
 
         // Redirect to two-factor verification page first
+        if ($user['accountType'] === 'buyer') {
         header("Location: ../html/home.html");
         exit();
+        } else {
+        header("Location: ../html/my_store.html");
+        exit();
+        }
     } else {
         $_SESSION['error'] = "Invalid email or password.";
         header("Location: ../html/login.html");
