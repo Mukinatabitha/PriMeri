@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login-container">
-        <h1 class="login-title">Admin Access</h1>
+        <h1 class="login-title">PriMeri Admin Access</h1>
         <form method="post" action="login.php">
             <div class="input-group">
                 <label for="username">Username</label>
