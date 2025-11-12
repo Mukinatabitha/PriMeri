@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php';
+require 'conf.php';
 
 class Mail {
     private $smtpHost;
