@@ -1,7 +1,7 @@
 <?php
 // catalog.php - Show categories instead of products
 include '../php/connect.php';
-
+//
 // Get unique categories with some product info
 $result = $db->query("
     SELECT category, COUNT(*) as product_count 
