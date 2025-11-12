@@ -11,14 +11,14 @@ if (!$db) {
 $storeId = isset($_GET['id']) ? intval($_GET['id']) : 1;
 
 // Fetch store data
-$storeQuery = $db->prepare("SELECT * FROM stores WHERE id = ?");
+$storeQuery = $db->prepare("SELECT * FROM stores WHERE storeID = ?");
 $storeQuery->bind_param("i", $storeId);
 $storeQuery->execute();
 $storeResult = $storeQuery->get_result();
 $store = $storeResult->fetch_assoc();
 
 // Fetch products for this store
-$productsQuery = $db->prepare("SELECT * FROM products WHERE store_id = ? ORDER BY id ASC");
+$productsQuery = $db->prepare("SELECT * FROM products WHERE storeID = ? ORDER BY id ASC");
 $productsQuery->bind_param("i", $storeId);
 $productsQuery->execute();
 $productsResult = $productsQuery->get_result();

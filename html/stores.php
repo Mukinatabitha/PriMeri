@@ -6,7 +6,6 @@ include '../php/connect.php';
 if (!$db) {
     die("Database connection failed");
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +14,7 @@ if (!$db) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PriMeri - Partner Stores</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/catalog.css">
     <link rel="stylesheet" href="../css/stores.css">
@@ -40,11 +39,10 @@ if (!$db) {
                     <li class="nav-item"><a class="nav-link text-dark" href="../php/contact.php">Contact</a></li>
                 </ul>
                 <div class="d-flex align-items-center">
-
-                        <a href="../php/logout.php">
-                            <button class="btn bg-primary-custom text-white px-4 py-2 rounded-3 shadow btn-hover-primary">Logout</button>
-                        </a>
-                    </div>
+                    <a href="../php/logout.php">
+                        <button class="btn bg-primary-custom text-white px-4 py-2 rounded-3 shadow btn-hover-primary">Logout</button>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -72,14 +70,12 @@ if (!$db) {
                 <select class="form-select" id="category-filter">
                     <option value="all" selected>All Categories</option>
                     <?php
-                    // Fetch unique categories from database
-                    $catQuery = $db->query("SELECT DISTINCT category FROM stores ORDER BY category");
+                    // Fetch categories from categories table
+                    $catQuery = $db->query("SELECT category_id, name FROM categories ORDER BY name");
                     if ($catQuery && $catQuery->num_rows > 0) {
                         while($cat = $catQuery->fetch_assoc()) {
-                            echo '<option value="'.htmlspecialchars($cat['category']).'">'.ucwords(htmlspecialchars($cat['category'])).'</option>';
+                            echo '<option value="'.htmlspecialchars($cat['category_id']).'">'.htmlspecialchars($cat['name']).'</option>';
                         }
-                    } else {
-                        echo '<option value="">No categories found</option>';
                     }
                     ?>
                 </select>
@@ -89,11 +85,10 @@ if (!$db) {
         <div class="d-flex flex-wrap gap-2 mb-4">
             <button class="btn btn-outline-primary btn-sm category-filter-btn" data-category="all">All Stores</button>
             <?php
-            // Reset and fetch categories again for buttons
             if ($catQuery) {
-                $catQuery->data_seek(0); // Reset pointer
+                $catQuery->data_seek(0);
                 while($cat = $catQuery->fetch_assoc()) {
-                    echo '<button class="btn btn-outline-primary btn-sm category-filter-btn" data-category="'.htmlspecialchars($cat['category']).'">'.ucwords(htmlspecialchars($cat['category'])).'</button>';
+                    echo '<button class="btn btn-outline-primary btn-sm category-filter-btn" data-category="'.htmlspecialchars($cat['category_id']).'">'.htmlspecialchars($cat['name']).'</button>';
                 }
             }
             ?>
@@ -101,32 +96,36 @@ if (!$db) {
 
         <div id="stores-grid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
             <?php
-            $storeQuery = $db->query("SELECT * FROM stores ORDER BY name ASC");
+            $storeQuery = $db->query("
+                SELECT s.*, c.name AS category_name, u.name AS manufacturer_name 
+                FROM stores s
+                JOIN categories c ON s.categoryID = c.category_id
+                JOIN users u ON s.manufacturerID = u.id
+                ORDER BY s.name ASC
+            ");
             if ($storeQuery && $storeQuery->num_rows > 0) {
                 while($store = $storeQuery->fetch_assoc()) {
                     echo '
-                    <div class="col store-card-container" data-categories="'.htmlspecialchars($store['category']).'">
+                    <div class="col store-card-container" data-category="'.htmlspecialchars($store['categoryID']).'">
                         <div class="card shadow-lg h-100 border-0 rounded-4 overflow-hidden store-card">
                             <div class="image-container">
-                                <img src="'.htmlspecialchars($store['image']).'" class="card-img-top" alt="'.htmlspecialchars($store['name']).'">
+                                <img src="'.htmlspecialchars($store['image_url']).'" class="card-img-top" alt="'.htmlspecialchars($store['name']).'">
                             </div>
                             <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h3 class="card-title fs-5 fw-semibold mb-1">'.htmlspecialchars($store['name']).'</h3>
-                                </div>
-                                <p class="card-text text-muted small mb-3">'.htmlspecialchars($store['description']).'</p>
+                                <h3 class="card-title fs-5 fw-semibold mb-1">'.htmlspecialchars($store['name']).'</h3>
+                                <p class="card-text text-muted small mb-2">'.htmlspecialchars($store['description']).'</p>
+                                <p class="mb-2"><strong>Manufacturer:</strong> '.htmlspecialchars($store['manufacturer_name']).'</p>
+                                <p class="mb-3"><strong>Category:</strong> '.htmlspecialchars($store['category_name']).'</p>
                                 <div class="mb-3">';
-                    
-                    // Display product tags
-                    if (!empty($store['products'])) {
-                        $tags = explode(',', $store['products']);
+                    // Display tags
+                    if (!empty($store['tags'])) {
+                        $tags = explode(',', $store['tags']);
                         foreach($tags as $tag){
                             echo '<span class="product-tag">'.htmlspecialchars(trim($tag)).'</span>';
                         }
                     }
-                    
                     echo '</div>
-                                <a href="store-detail.php?id='.$store['id'].'" class="btn '.htmlspecialchars($store['btnClass']).' text-white w-100 btn-sm fw-medium btn-hover-primary">View Store</a>
+                        <a href="store-detail.php?id='.$store['storeID'].'" class="btn '.htmlspecialchars($store['btnClass']).' text-white w-100 btn-sm fw-medium btn-hover-primary">View Store</a>
                             </div>
                         </div>
                     </div>';
@@ -148,7 +147,7 @@ if (!$db) {
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script>
 function filterStoresByCategory(category) {
     const storeCards = document.querySelectorAll('.store-card-container');
@@ -167,8 +166,7 @@ function filterStoresByCategory(category) {
     document.getElementById('category-filter').value = category;
     
     storeCards.forEach(card => {
-        const categories = card.dataset.categories.split(',');
-        card.style.display = (category === 'all' || categories.includes(category)) ? 'block' : 'none';
+        card.style.display = (category === 'all' || card.dataset.category === category) ? 'block' : 'none';
     });
 }
 
@@ -189,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add Enter key support for search
     document.getElementById('search-input').addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
             document.getElementById('search-button').click();

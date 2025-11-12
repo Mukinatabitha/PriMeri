@@ -24,10 +24,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($userObj->signup($fullName, $email, $accountType, $password)) {
-        $mail = new Mail(SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_ENCRYPTION);
+        //send registration email
+        // Initialize mailer
+$mail = new Mail(
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_USERNAME,
+    SMTP_PASSWORD,
+    SMTP_ENCRYPTION
+);
+
         $mail->registrationEmail($email, $fullName);
-        header("Location: ../html/login.html");
-        exit();
+        if ($accountType === 'buyer') {
+            header("Location: ../html/login.html");
+            exit();
+        }
+        else {
+            header("Location: ../html/create_store.html");
+            exit();
+        }
     } else {
         echo "Error: Registration failed.";
     }

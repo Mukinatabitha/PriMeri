@@ -8,6 +8,182 @@ if (!isset($_SESSION['admin_id'])) {
 
 include '../php/connect.php';
 
+// Handle report generation
+if (isset($_GET['generate_report'])) {
+    $report_type = $_GET['report_type'];
+    $format = $_GET['format'];
+    
+    switch($report_type) {
+        case 'users':
+            generateUsersReport($format, $db);
+            break;
+        case 'products':
+            generateProductsReport($format, $db);
+            break;
+        case 'orders':
+            generateOrdersReport($format, $db);
+            break;
+        case 'revenue':
+            generateRevenueReport($format, $db);
+            break;
+    }
+    exit();
+}
+
+// Report generation functions
+function generateUsersReport($format, $db) {
+    $users = $db->query("SELECT id, name, email, accountType FROM users ORDER BY id")->fetch_all(MYSQLI_ASSOC);
+    
+    if ($format === 'csv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="users_report_' . date('Y-m-d') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['ID', 'Name', 'Email', 'Account Type']);
+        
+        foreach ($users as $user) {
+            fputcsv($output, $user);
+        }
+        fclose($output);
+    } else {
+        header('Content-Type: text/html');
+        echo generateHTMLReport('Users Report', $users, ['ID', 'Name', 'Email', 'Account Type']);
+    }
+}
+
+function generateProductsReport($format, $db) {
+    $products = $db->query("
+        SELECT p.id, p.name, p.price, p.category, p.minOrder, s.name as store_name 
+        FROM products p 
+        JOIN stores s ON p.storeID = s.storeID 
+        ORDER BY p.id
+    ")->fetch_all(MYSQLI_ASSOC);
+    
+    if ($format === 'csv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="products_report_' . date('Y-m-d') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['ID', 'Product Name', 'Price', 'Category', 'Min Order', 'Store']);
+        
+        foreach ($products as $product) {
+            fputcsv($output, $product);
+        }
+        fclose($output);
+    } else {
+        header('Content-Type: text/html');
+        echo generateHTMLReport('Products Report', $products, ['ID', 'Product Name', 'Price', 'Category', 'Min Order', 'Store']);
+    }
+}
+
+function generateOrdersReport($format, $db) {
+    $orders = $db->query("
+        SELECT o.order_id, o.customer_name, o.total_amount, o.status, o.order_date, 
+               COUNT(oi.order_item_id) as item_count
+        FROM orders o 
+        LEFT JOIN order_items oi ON o.order_id = oi.order_id 
+        GROUP BY o.order_id 
+        ORDER BY o.order_date DESC
+    ")->fetch_all(MYSQLI_ASSOC);
+    
+    if ($format === 'csv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="orders_report_' . date('Y-m-d') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Order ID', 'Customer', 'Total Amount', 'Status', 'Order Date', 'Item Count']);
+        
+        foreach ($orders as $order) {
+            fputcsv($output, $order);
+        }
+        fclose($output);
+    } else {
+        header('Content-Type: text/html');
+        echo generateHTMLReport('Orders Report', $orders, ['Order ID', 'Customer', 'Total Amount', 'Status', 'Order Date', 'Item Count']);
+    }
+}
+
+function generateRevenueReport($format, $db) {
+    $revenue = $db->query("
+        SELECT DATE_FORMAT(order_date, '%Y-%m') as month, 
+               COUNT(*) as order_count,
+               SUM(total_amount) as revenue,
+               AVG(total_amount) as avg_order_value
+        FROM orders 
+        WHERE status = 'paid' 
+        GROUP BY DATE_FORMAT(order_date, '%Y-%m') 
+        ORDER BY month DESC
+    ")->fetch_all(MYSQLI_ASSOC);
+    
+    if ($format === 'csv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="revenue_report_' . date('Y-m-d') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Month', 'Order Count', 'Revenue', 'Average Order Value']);
+        
+        foreach ($revenue as $row) {
+            fputcsv($output, $row);
+        }
+        fclose($output);
+    } else {
+        header('Content-Type: text/html');
+        echo generateHTMLReport('Revenue Report', $revenue, ['Month', 'Order Count', 'Revenue', 'Average Order Value']);
+    }
+}
+
+function generateHTMLReport($title, $data, $headers) {
+    $html = '<!DOCTYPE html>
+    <html>
+    <head>
+        <title>' . $title . '</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            .report-header { text-align: center; margin-bottom: 30px; }
+            .report-footer { margin-top: 30px; text-align: right; font-size: 12px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="report-header">
+            <h1>' . $title . '</h1>
+            <p>Generated on: ' . date('F j, Y g:i A') . '</p>
+        </div>
+        <table>
+            <thead>
+                <tr>';
+    
+    foreach ($headers as $header) {
+        $html .= '<th>' . $header . '</th>';
+    }
+    
+    $html .= '</tr>
+            </thead>
+            <tbody>';
+    
+    foreach ($data as $row) {
+        $html .= '<tr>';
+        foreach ($row as $value) {
+            $html .= '<td>' . htmlspecialchars($value) . '</td>';
+        }
+        $html .= '</tr>';
+    }
+    
+    $html .= '</tbody>
+        </table>
+        <div class="report-footer">
+            <p>Report generated by PriMeri Admin System</p>
+        </div>
+    </body>
+    </html>';
+    
+    return $html;
+}
+
 // Handle AJAX request for user details
 if (isset($_GET['action']) && $_GET['action'] == 'get_user_details') {
     $user_id = intval($_GET['user_id']);
@@ -40,11 +216,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'get_user_details') {
     $stores = [];
     if ($user['accountType'] == 'manufacturer') {
         $store_stmt = $db->prepare("
-            SELECT s.id, s.name, s.category, COUNT(p.id) as product_count
+            SELECT s.storeID, s.name, c.name as category_name, 
+                   COUNT(p.id) as product_count
             FROM stores s 
-            LEFT JOIN products p ON s.id = p.store_id 
-            WHERE s.id IN (SELECT id FROM stores WHERE id = ?)
-            GROUP BY s.id
+            LEFT JOIN products p ON s.storeID = p.storeID 
+            LEFT JOIN categories c ON s.categoryID = c.category_id
+            WHERE s.manufacturerID = ?
+            GROUP BY s.storeID
         ");
         $store_stmt->bind_param("i", $user_id);
         $store_stmt->execute();
@@ -60,7 +238,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'get_user_details') {
     // Calculate user statistics
     $total_orders = $db->query("SELECT COUNT(*) FROM orders WHERE business_owner_id = $user_id")->fetch_row()[0];
     $total_spent = $db->query("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE business_owner_id = $user_id AND status = 'paid'")->fetch_row()[0];
-    $last_login = "Not tracked"; // You might want to add a last_login field to users table
+    $last_login = "Not tracked";
     
     echo json_encode([
         'user' => $user,
@@ -119,13 +297,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #ff3e3e;
@@ -202,7 +380,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
         }
         
-        /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             background: rgba(0, 0, 0, 0.7);
@@ -487,6 +664,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
         }
         
+        .report-generation {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .report-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .report-option {
+            background: rgba(40, 40, 40, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .report-option select, .report-option button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
+        }
+        
+        .report-option button {
+            background: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .report-option button:hover {
+            background: var(--primary-dark);
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-stat {
+            background: rgba(255, 62, 62, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .quick-stat .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .quick-stat .label {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+        
         @media (max-width: 768px) {
             .charts-grid {
                 grid-template-columns: 1fr;
@@ -537,6 +785,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button class="nav-tab" onclick="switchTab('manufacturers')">Manufacturers</button>
             <button class="nav-tab" onclick="switchTab('users')">User Management</button>
             <button class="nav-tab" onclick="switchTab('orders')">Orders & Revenue</button>
+            <button class="nav-tab" onclick="switchTab('reports')">Reports</button>
         </div>
 
         <!-- Overview Tab -->
@@ -607,7 +856,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $result = $db->query("
                             SELECT p.name, p.price, s.name as store_name, p.category 
                             FROM products p 
-                            JOIN stores s ON p.store_id = s.id 
+                            JOIN stores s ON p.storeID = s.storeID 
                             ORDER BY p.price DESC 
                             LIMIT 10
                         ");
@@ -678,9 +927,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h4>Manufacturers by Category</h4>
                         <?php
                         $result = $db->query("
-                            SELECT category, COUNT(*) as count 
-                            FROM stores 
-                            GROUP BY category 
+                            SELECT c.name as category_name, COUNT(*) as count 
+                            FROM stores s 
+                            JOIN categories c ON s.categoryID = c.category_id
+                            GROUP BY c.name 
                             ORDER BY count DESC
                         ");
                         $store_categories = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
@@ -695,7 +945,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <tbody>
                                 <?php foreach($store_categories as $category): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($category['category']); ?></td>
+                                    <td><?php echo htmlspecialchars($category['category_name']); ?></td>
                                     <td><?php echo $category['count']; ?></td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -709,8 +959,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $result = $db->query("
                             SELECT s.name, COUNT(p.id) as product_count 
                             FROM stores s 
-                            LEFT JOIN products p ON s.id = p.store_id 
-                            GROUP BY s.id, s.name 
+                            LEFT JOIN products p ON s.storeID = p.storeID 
+                            GROUP BY s.storeID, s.name 
                             ORDER BY product_count DESC 
                             LIMIT 10
                         ");
@@ -853,6 +1103,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="report-generation">
+                <h2 class="section-title">Report Generation</h2>
+                <p>Generate comprehensive reports in CSV or HTML format for analysis and record-keeping.</p>
+                
+                <div class="report-options">
+                    <div class="report-option">
+                        <h4>Users Report</h4>
+                        <p>All registered users with account details</p>
+                        <select id="users_format">
+                            <option value="csv">CSV Format</option>
+                            <option value="html">HTML Format</option>
+                        </select>
+                        <button onclick="generateReport('users')">Generate Users Report</button>
+                    </div>
+                    
+                    <div class="report-option">
+                        <h4>Products Report</h4>
+                        <p>All products with pricing and store information</p>
+                        <select id="products_format">
+                            <option value="csv">CSV Format</option>
+                            <option value="html">HTML Format</option>
+                        </select>
+                        <button onclick="generateReport('products')">Generate Products Report</button>
+                    </div>
+                    
+                    <div class="report-option">
+                        <h4>Orders Report</h4>
+                        <p>Complete order history with customer details</p>
+                        <select id="orders_format">
+                            <option value="csv">CSV Format</option>
+                            <option value="html">HTML Format</option>
+                        </select>
+                        <button onclick="generateReport('orders')">Generate Orders Report</button>
+                    </div>
+                    
+                    <div class="report-option">
+                        <h4>Revenue Report</h4>
+                        <p>Monthly revenue analysis and trends</p>
+                        <select id="revenue_format">
+                            <option value="csv">CSV Format</option>
+                            <option value="html">HTML Format</option>
+                        </select>
+                        <button onclick="generateReport('revenue')">Generate Revenue Report</button>
+                    </div>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="number"><?php echo number_format($total_users); ?></div>
+                        <div class="label">Total Users</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="number"><?php echo number_format($total_products); ?></div>
+                        <div class="label">Total Products</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="number"><?php echo number_format($total_orders); ?></div>
+                        <div class="label">Total Orders</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="number">KSh <?php echo number_format($total_revenue); ?></div>
+                        <div class="label">Total Revenue</div>
                     </div>
                 </div>
             </div>
@@ -1046,7 +1365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     html += `
                         <tr>
                             <td>${escapeHtml(store.name)}</td>
-                            <td>${store.category}</td>
+                            <td>${store.category_name}</td>
                             <td>${store.product_count}</td>
                         </tr>
                     `;
@@ -1089,6 +1408,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const modal = document.getElementById('userModal');
             if (event.target === modal) {
                 closeModal();
+            }
+        }
+
+        // Report generation function
+        function generateReport(reportType) {
+            const format = document.getElementById(reportType + '_format').value;
+            const url = `?generate_report=1&report_type=${reportType}&format=${format}`;
+            
+            if (format === 'csv') {
+                // For CSV, trigger download
+                window.location.href = url;
+            } else {
+                // For HTML, open in new tab
+                window.open(url, '_blank');
             }
         }
 

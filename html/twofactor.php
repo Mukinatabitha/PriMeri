@@ -167,7 +167,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'verify_code') {
                                 header("Location: ../html/home.html");
                                 exit();
                             } else {
-                                header("Location: ../html/my_store.html");
+                                header("Location: ../html/my_store.php");
                                 exit();
                             }
                         }
