@@ -13,7 +13,7 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Get store ID from URL
-    $store_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
+    $store_id = isset($_GET['storeID']) ? intval($_GET['id']) : 1;
     
     // Fetch store details
     $stmt = $conn->prepare("SELECT * FROM stores WHERE id = ?");
