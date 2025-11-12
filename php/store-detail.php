@@ -1,6 +1,6 @@
 <?php
 // store-detail.php
-session_start(); // Start session for cart management
+session_start();
 
 // Database connection
 $servername = "localhost";
